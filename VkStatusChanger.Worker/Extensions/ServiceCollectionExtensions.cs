@@ -10,6 +10,8 @@ using VkStatusChanger.Worker.Models.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
+using VkStatusChanger.Worker.Infrastructure.HttpClients;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -44,6 +46,8 @@ namespace VkStatusChanger.Worker.Extensions
 
                 return vkApi;
             });
+
+            services.AddScoped<IVkStatusHttpClient, VkStatusHttpClient>();
 
             return services;
         }

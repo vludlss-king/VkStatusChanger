@@ -1,13 +1,13 @@
 ﻿using Quartz;
-using VkNet.Abstractions;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
 
 namespace VkStatusChanger.Worker.Jobs
 {
     internal class ScheduleStatusJob : IJob
     {
-        private readonly IVkApi _vkHttpClient;
+        private readonly IVkStatusHttpClient _vkHttpClient;
 
-        public ScheduleStatusJob(IVkApi vkHttpClient)
+        public ScheduleStatusJob(IVkStatusHttpClient vkHttpClient)
         {
             _vkHttpClient = vkHttpClient;    
         }
@@ -15,7 +15,9 @@ namespace VkStatusChanger.Worker.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             var statusText = context.JobDetail.JobDataMap.GetString("statusText");
-            await _vkHttpClient.Status.SetAsync(statusText);
+
+            if(statusText is not null)
+                await _vkHttpClient.SetStatus(statusText);
         }
     }
 }

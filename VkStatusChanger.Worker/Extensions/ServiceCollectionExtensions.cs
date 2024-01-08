@@ -8,6 +8,8 @@ using VkStatusChanger.Worker.Jobs;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Settings;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -89,6 +91,26 @@ namespace VkStatusChanger.Worker.Extensions
                         });
                     }
                 }
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration, SettingsModel settingsModel, InputArgs inputArgs)
+        {
+            services.AddSingleton(provider => Options.Create(settingsModel));
+
+            configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets<InputArgs>();
+            services.AddSingleton(provider =>
+            {
+                var env = provider.GetRequiredService<IHostEnvironment>();
+                var configuration = provider.GetRequiredService<IConfiguration>();
+
+                if (env.IsDevelopment())
+                    return Options.Create(configuration.Get<InputArgs>()!);
+                else
+                    return Options.Create(inputArgs);
             });
 
             return services;

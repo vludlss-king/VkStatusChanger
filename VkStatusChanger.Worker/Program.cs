@@ -24,23 +24,8 @@ namespace VkStatusChanger
                     var builder = Host.CreateApplicationBuilder(args);
 
                     var settingsModel = ReadSettings();
-                    builder.Services.AddSingleton(provider => Options.Create(settingsModel!));
-
-                    builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddUserSecrets<InputArgs>();
-                    builder.Services.AddSingleton(provider =>
-                    {
-                        var env = provider.GetRequiredService<IHostEnvironment>();
-                        var configuration = provider.GetRequiredService<IConfiguration>();
-
-                        if (env.IsDevelopment())
-                            return Options.Create(configuration.Get<InputArgs>()!);
-                        else
-                            return Options.Create(inputArgs);
-                    });
-
+                    builder.Services.AddConfiguration(builder.Configuration, settingsModel, inputArgs);
                     builder.Services.AddVkHttpClient();
-
                     builder.Services.AddJobScheduler(settingsModel!);
 
                     var host = builder.Build();

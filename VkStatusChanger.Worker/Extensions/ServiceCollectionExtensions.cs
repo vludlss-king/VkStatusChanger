@@ -56,6 +56,7 @@ namespace VkStatusChanger.Worker.Extensions
                 var jobKey = new JobKey(nameof(ScheduleStatusJob));
                 q.AddJob<ScheduleStatusJob>(jobKey);
 
+                const string jobDataKey = "statusText";
                 if (settingsModel!.Every is not null && settingsModel!.Schedule is null)
                 {
                     q.AddTrigger(t =>
@@ -66,13 +67,12 @@ namespace VkStatusChanger.Worker.Extensions
 
                         var dict = new Dictionary<string, object>()
                         {
-                            ["statusText"] = settingsModel!.Every!.StatusesTexts
+                            [jobDataKey] = settingsModel!.Every!.StatusesTexts
                         };
                         var jobData = new JobDataMap((IDictionary<string, object>)dict);
                         t.UsingJobData(jobData);
                     });
                 }
-
                 if (settingsModel!.Schedule is not null && settingsModel!.Every is null)
                 {
                     foreach (var scheduleItem in settingsModel!.Schedule!.Items!)
@@ -82,7 +82,7 @@ namespace VkStatusChanger.Worker.Extensions
                             t.ForJob(jobKey);
                             t.StartAt(scheduleItem.Date);
 
-                            t.UsingJobData("statusText", scheduleItem.StatusText!);
+                            t.UsingJobData(jobDataKey, scheduleItem.StatusText!);
                         });
                     }
                 }

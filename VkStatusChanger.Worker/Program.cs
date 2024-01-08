@@ -26,7 +26,7 @@ namespace VkStatusChanger
                     builder.Services.AddSingleton(provider => Options.Create(settingsModel!));
                     builder.Services.AddSingleton(provider => Options.Create(inputArgs));
 
-                    builder.Services.AddVkHttpClient();;
+                    builder.Services.AddVkHttpClient();
 
                     builder.Services.AddJobScheduler(settingsModel!);
 

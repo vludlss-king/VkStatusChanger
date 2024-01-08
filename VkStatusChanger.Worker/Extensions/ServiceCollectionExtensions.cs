@@ -53,15 +53,18 @@ namespace VkStatusChanger.Worker.Extensions
                 q.UseInMemoryStore();
                 q.UseDefaultThreadPool(1);
 
-                var jobKey = new JobKey(nameof(ScheduleStatusJob));
-                q.AddJob<ScheduleStatusJob>(jobKey);
+                var everyStatusJobKey = new JobKey(nameof(EveryStatusJob));
+                q.AddJob<EveryStatusJob>(everyStatusJobKey);
+
+                var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
+                q.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
 
                 const string jobDataKey = "statusText";
                 if (settingsModel!.Every is not null && settingsModel!.Schedule is null)
                 {
                     q.AddTrigger(t =>
                     {
-                        t.ForJob(jobKey);
+                        t.ForJob(everyStatusJobKey);
                         t.StartNow();
                         t.WithSimpleSchedule(s => s.WithIntervalInSeconds(settingsModel!.Every!.Seconds));
 
@@ -79,7 +82,7 @@ namespace VkStatusChanger.Worker.Extensions
                     {
                         q.AddTrigger(t =>
                         {
-                            t.ForJob(jobKey);
+                            t.ForJob(scheduleStatusJobKey);
                             t.StartAt(scheduleItem.Date);
 
                             t.UsingJobData(jobDataKey, scheduleItem.StatusText!);

@@ -59,15 +59,12 @@ namespace VkStatusChanger.Worker.Extensions
                 q.UseInMemoryStore();
                 q.UseDefaultThreadPool(1);
 
-                var everyStatusJobKey = new JobKey(nameof(EveryStatusJob));
-                q.AddJob<EveryStatusJob>(everyStatusJobKey);
-
-                var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
-                q.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
-
                 const string jobDataKey = "statusText";
                 if (settingsModel!.Every is not null && settingsModel!.Schedule is null)
                 {
+                    var everyStatusJobKey = new JobKey(nameof(EveryStatusJob));
+                    q.AddJob<EveryStatusJob>(everyStatusJobKey);
+
                     q.AddTrigger(t =>
                     {
                         t.ForJob(everyStatusJobKey);
@@ -84,6 +81,9 @@ namespace VkStatusChanger.Worker.Extensions
                 }
                 if (settingsModel!.Schedule is not null && settingsModel!.Every is null)
                 {
+                    var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
+                    q.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
+
                     var dateNow = DateTime.Now;
                     foreach (var scheduleItem in settingsModel!.Schedule!.Items!.Where(item => item.Date > dateNow))
                     {
@@ -96,6 +96,11 @@ namespace VkStatusChanger.Worker.Extensions
                         });
                     }
                 }
+            });
+
+            services.AddQuartzHostedService(options =>
+            {
+                options.WaitForJobsToComplete = true;
             });
 
             return services;

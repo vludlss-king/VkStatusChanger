@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using VkStatusChanger.Worker.Extensions;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Settings;
+using Serilog;
+using Serilog.Extensions.Hosting;
 
 namespace VkStatusChanger
 {
@@ -25,6 +27,11 @@ namespace VkStatusChanger
                     builder.Services.AddConfiguration(builder.Configuration, settingsModel, inputArgs);
                     builder.Services.AddVkHttpClient();
                     builder.Services.AddJobScheduler(settingsModel!);
+                    builder.Services.AddSerilog(cfg =>
+                    {
+                        cfg.Enrich.FromLogContext()
+                            .WriteTo.Console();
+                    });
 
                     var host = builder.Build();
                     await host.RunAsync();

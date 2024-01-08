@@ -18,7 +18,7 @@ namespace VkStatusChanger
             await Parser.Default.ParseArguments<InputArgs>(args)
                 .WithParsedAsync(async inputArgs =>
                 {
-                    Initialize(inputArgs);
+                    Initialize();
 
                     var builder = Host.CreateApplicationBuilder(args);
 
@@ -35,7 +35,7 @@ namespace VkStatusChanger
                 });
         }
 
-        static void Initialize(InputArgs inputArgs)
+        static void Initialize()
         {
             if(!File.Exists(settingsFileName))
                 File.Create(settingsFileName).Dispose();

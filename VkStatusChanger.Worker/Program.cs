@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -24,7 +25,19 @@ namespace VkStatusChanger
 
                     var settingsModel = ReadSettings();
                     builder.Services.AddSingleton(provider => Options.Create(settingsModel!));
-                    builder.Services.AddSingleton(provider => Options.Create(inputArgs));
+
+                    builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddUserSecrets<InputArgs>();
+                    builder.Services.AddSingleton(provider =>
+                    {
+                        var env = provider.GetRequiredService<IHostEnvironment>();
+                        var configuration = provider.GetRequiredService<IConfiguration>();
+
+                        if (env.IsDevelopment())
+                            return Options.Create(configuration.Get<InputArgs>()!);
+                        else
+                            return Options.Create(inputArgs);
+                    });
 
                     builder.Services.AddVkHttpClient();
 
@@ -44,7 +57,7 @@ namespace VkStatusChanger
         static SettingsModel ReadSettings()
         {
             var settingsJson = File.ReadAllText(settingsFileName);
-            var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson);
+            var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
 
             return settingsModel;
         }

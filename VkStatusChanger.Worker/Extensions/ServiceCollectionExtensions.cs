@@ -80,7 +80,8 @@ namespace VkStatusChanger.Worker.Extensions
                 }
                 if (settingsModel!.Schedule is not null && settingsModel!.Every is null)
                 {
-                    foreach (var scheduleItem in settingsModel!.Schedule!.Items!)
+                    var dateNow = DateTime.Now;
+                    foreach (var scheduleItem in settingsModel!.Schedule!.Items!.Where(item => item.Date > dateNow))
                     {
                         q.AddTrigger(t =>
                         {

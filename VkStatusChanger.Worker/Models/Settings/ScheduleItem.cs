@@ -2,7 +2,7 @@
 {
     internal class ScheduleItem
     {
-        public string? TextStatus { get; set; }
+        public string? StatusText { get; set; }
         public DateTime Date { get; set; }
     }
 }

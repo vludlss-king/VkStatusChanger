@@ -3,10 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using VkNet;
-using VkNet.Abstractions;
-using VkNet.Enums.Filters;
-using VkNet.Model;
+using VkStatusChanger.Worker.Extensions;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Settings;
 
@@ -25,39 +22,13 @@ namespace VkStatusChanger
 
                     var builder = Host.CreateApplicationBuilder(args);
 
-                    builder.Services.AddScoped<IVkApi>(provider =>
-                    {
-                        var vkApi = new VkApi();
+                    var settingsModel = ReadSettings();
+                    builder.Services.AddSingleton(provider => Options.Create(settingsModel!));
+                    builder.Services.AddSingleton(provider => Options.Create(inputArgs));
 
-                        var authParams = new ApiAuthParams
-                        {
-                            ApplicationId = inputArgs.ApplicationId,
-                            Login = inputArgs.Login,
-                            Password = inputArgs.Password,
-                            Settings = Settings.Status,
-                        };
+                    builder.Services.AddVkHttpClient();;
 
-                        if (inputArgs.TwoFactorAuth)
-                        {
-                            authParams.TwoFactorAuthorization = () =>
-                            {
-                                Console.WriteLine("Введите код двух факторной авторизации");
-                                return Console.ReadLine()!.Trim();
-                            };
-                        }
-
-                        vkApi.Authorize(authParams);
-
-                        return vkApi;
-                    });
-
-                    builder.Services.AddSingleton(provider =>
-                    {
-                        var settingsJson = File.ReadAllText(settingsFileName);
-                        var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson);
-
-                        return Options.Create(settingsModel!);
-                    });
+                    builder.Services.AddJobScheduler(settingsModel!);
 
                     var host = builder.Build();
                     await host.RunAsync();
@@ -68,6 +39,14 @@ namespace VkStatusChanger
         {
             if(!File.Exists(settingsFileName))
                 File.Create(settingsFileName).Dispose();
+        }
+
+        static SettingsModel ReadSettings()
+        {
+            var settingsJson = File.ReadAllText(settingsFileName);
+            var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson);
+
+            return settingsModel;
         }
     }
 }

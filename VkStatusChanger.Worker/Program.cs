@@ -6,7 +6,6 @@ using VkStatusChanger.Worker.Extensions;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Settings;
 using Serilog;
-using Serilog.Extensions.Hosting;
 
 namespace VkStatusChanger
 {
@@ -26,7 +25,7 @@ namespace VkStatusChanger
                     var settingsModel = ReadSettings();
                     builder.Services.AddConfiguration(builder.Configuration, settingsModel, inputArgs);
                     builder.Services.AddVkHttpClient();
-                    builder.Services.AddJobScheduler(settingsModel!);
+                    builder.Services.AddJobScheduler(settingsModel);
                     builder.Services.AddSerilog(cfg =>
                     {
                         cfg.Enrich.FromLogContext()
@@ -46,8 +45,8 @@ namespace VkStatusChanger
 
         static SettingsModel ReadSettings()
         {
-            var settingsJson = File.ReadAllText(settingsFileName);
-            var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
+            string settingsJson = File.ReadAllText(settingsFileName);
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
 
             return settingsModel;
         }

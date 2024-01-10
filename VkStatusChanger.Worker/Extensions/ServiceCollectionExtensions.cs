@@ -27,21 +27,9 @@ namespace VkStatusChanger.Worker.Extensions
 
                 var authParams = new ApiAuthParams
                 {
-                    ApplicationId = inputArgs.ApplicationId,
-                    Login = inputArgs.Login,
-                    Password = inputArgs.Password,
-                    Settings = Settings.Status,
+                    AccessToken = inputArgs.AccessToken
                 };
-
-                if (inputArgs.TwoFactorAuth)
-                {
-                    authParams.TwoFactorAuthorization = () =>
-                    {
-                        Console.WriteLine("Введите код двух факторной авторизации");
-                        return Console.ReadLine()!.Trim();
-                    };
-                }
-
+                
                 vkApi.Authorize(authParams);
 
                 return vkApi;
@@ -73,7 +61,7 @@ namespace VkStatusChanger.Worker.Extensions
 
                         var dict = new Dictionary<string, object>()
                         {
-                            [jobDataKey] = settingsModel!.Every!.StatusesTexts
+                            [jobDataKey] = settingsModel!.Every!.StatusesTexts!
                         };
                         var jobData = new JobDataMap((IDictionary<string, object>)dict);
                         t.UsingJobData(jobData);

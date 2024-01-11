@@ -20,7 +20,7 @@
 
 ```--access-token {token}```
 
-Пример настройки settings.json
+**Пример настройки settings.json:**
 ```
 {
     "Every": {

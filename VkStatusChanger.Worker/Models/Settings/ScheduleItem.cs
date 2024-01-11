@@ -4,5 +4,6 @@
     {
         public string? StatusText { get; set; }
         public DateTime Date { get; set; }
+        public TimeSpan Time { get; set; }
     }
 }

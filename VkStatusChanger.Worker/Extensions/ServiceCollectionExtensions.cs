@@ -72,13 +72,19 @@ namespace VkStatusChanger.Worker.Extensions
                     var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
                     q.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
 
-                    var dateNow = DateTime.Now;
-                    foreach (var scheduleItem in settingsModel!.Schedule!.Items!.Where(item => item.Date > dateNow))
+                    var dateTimeNow = DateTime.Now;
+                    var scheduleItems = settingsModel!.Schedule!.Items!.Select(item => new
+                        {
+                            DateTime = item.Date.Add(item.Time),
+                            StatusText = item.StatusText
+                        })
+                        .Where(item => item.DateTime > dateTimeNow);
+                    foreach (var scheduleItem in scheduleItems)
                     {
                         q.AddTrigger(t =>
                         {
                             t.ForJob(scheduleStatusJobKey)
-                                .StartAt(scheduleItem.Date);
+                                .StartAt(scheduleItem.DateTime);
 
                             t.UsingJobData(jobDataKey, scheduleItem.StatusText!);
                         });

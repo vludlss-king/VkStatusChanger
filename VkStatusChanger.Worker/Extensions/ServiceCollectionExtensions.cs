@@ -55,9 +55,9 @@ namespace VkStatusChanger.Worker.Extensions
 
                     q.AddTrigger(t =>
                     {
-                        t.ForJob(everyStatusJobKey);
-                        t.StartNow();
-                        t.WithSimpleSchedule(s => s.WithIntervalInSeconds(settingsModel!.Every!.Seconds));
+                        t.ForJob(everyStatusJobKey)
+                            .StartNow()
+                            .WithSimpleSchedule(s => s.WithIntervalInSeconds(settingsModel!.Every!.Seconds).RepeatForever());
 
                         var dict = new Dictionary<string, object>()
                         {
@@ -77,8 +77,8 @@ namespace VkStatusChanger.Worker.Extensions
                     {
                         q.AddTrigger(t =>
                         {
-                            t.ForJob(scheduleStatusJobKey);
-                            t.StartAt(scheduleItem.Date);
+                            t.ForJob(scheduleStatusJobKey)
+                                .StartAt(scheduleItem.Date);
 
                             t.UsingJobData(jobDataKey, scheduleItem.StatusText!);
                         });

@@ -4,6 +4,15 @@
 
 Статусы можно менять каждые N секунд либо по графику дат.
 
+Версия VK API: 5.131
+
+Применённые библиотеки:
+- CommandLineParser
+- Microsoft.Extensions.Hosting
+- Quartz
+- Serilog
+- VkNet
+
 Пример настройки settings.json
 ```
 {

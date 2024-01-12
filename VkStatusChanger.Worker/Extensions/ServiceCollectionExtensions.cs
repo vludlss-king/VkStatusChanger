@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure.HttpClients;
+using VkStatusChanger.Worker.Enums;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -42,53 +43,60 @@ namespace VkStatusChanger.Worker.Extensions
 
         public static IServiceCollection AddJobScheduler(this IServiceCollection services, SettingsModel settingsModel)
         {
-            services.AddQuartz(q =>
+            services.AddQuartz(quartzCfg =>
             {
-                q.UseInMemoryStore();
-                q.UseDefaultThreadPool(1);
+                quartzCfg.UseInMemoryStore();
+                quartzCfg.UseDefaultThreadPool(1);
 
                 const string jobDataKey = "statusText";
-                if (settingsModel!.Every is not null && settingsModel!.Schedule is null)
+                switch (settingsModel.SettingsType)
                 {
-                    var everyStatusJobKey = new JobKey(nameof(EveryStatusJob));
-                    q.AddJob<EveryStatusJob>(everyStatusJobKey);
-
-                    q.AddTrigger(t =>
-                    {
-                        t.ForJob(everyStatusJobKey)
-                            .StartNow()
-                            .WithSimpleSchedule(s => s.WithIntervalInSeconds(settingsModel!.Every!.Seconds).RepeatForever());
-
-                        var dict = new Dictionary<string, object>()
+                    case SettingsType.Every:
                         {
-                            [jobDataKey] = settingsModel!.Every!.StatusesTexts!
-                        };
-                        var jobData = new JobDataMap((IDictionary<string, object>)dict);
-                        t.UsingJobData(jobData);
-                    });
-                }
-                if (settingsModel!.Schedule is not null && settingsModel!.Every is null)
-                {
-                    var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
-                    q.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
+                            var everyStatusJobKey = new JobKey(nameof(EveryStatusJob));
+                            quartzCfg.AddJob<EveryStatusJob>(everyStatusJobKey);
 
-                    var dateTimeNow = DateTime.Now;
-                    var scheduleItems = settingsModel!.Schedule!.Items!.Select(item => new
-                        {
-                            DateTime = item.Date.Add(item.Time),
-                            StatusText = item.StatusText
-                        })
-                        .Where(item => item.DateTime > dateTimeNow);
-                    foreach (var scheduleItem in scheduleItems)
-                    {
-                        q.AddTrigger(t =>
-                        {
-                            t.ForJob(scheduleStatusJobKey)
-                                .StartAt(scheduleItem.DateTime);
+                            quartzCfg.AddTrigger(triggerCfg =>
+                            {
+                                triggerCfg.ForJob(everyStatusJobKey)
+                                    .StartNow()
+                                    .WithSimpleSchedule(builder => builder.WithIntervalInSeconds(settingsModel!.Every!.Seconds).RepeatForever());
 
-                            t.UsingJobData(jobDataKey, scheduleItem.StatusText!);
-                        });
-                    }
+                                var dict = new Dictionary<string, object>()
+                                {
+                                    [jobDataKey] = settingsModel!.Every!.StatusesTexts!
+                                };
+                                var jobData = new JobDataMap((IDictionary<string, object>)dict);
+                                triggerCfg.UsingJobData(jobData);
+                            });
+
+                            break;
+                        }
+                    case SettingsType.Schedule:
+                        {
+                            var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
+                            quartzCfg.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
+
+                            var dateTimeNow = DateTime.Now;
+                            var scheduleItems = settingsModel!.Schedule!.Items!.Select(item => new
+                            {
+                                DateTime = item.Date.Add(item.Time),
+                                StatusText = item.StatusText
+                            })
+                                .Where(item => item.DateTime > dateTimeNow);
+                            foreach (var scheduleItem in scheduleItems)
+                            {
+                                quartzCfg.AddTrigger(triggerCfg =>
+                                {
+                                    triggerCfg.ForJob(scheduleStatusJobKey)
+                                        .StartAt(scheduleItem.DateTime);
+
+                                    triggerCfg.UsingJobData(jobDataKey, scheduleItem.StatusText!);
+                                });
+                            }
+
+                            break;
+                        }
                 }
             });
 

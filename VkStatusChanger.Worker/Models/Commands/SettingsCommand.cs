@@ -1,16 +1,35 @@
 ﻿using CommandLine;
 using VkStatusChanger.Worker.Attributes;
+using VkStatusChanger.Worker.Enums;
 
 namespace VkStatusChanger.Worker.Models.Commands
 {
     [Verb("settings")]
-    [ChildVerbs(typeof(ResetCommand), typeof(AuthCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
+    [ChildVerbs(typeof(ResetCommand), typeof(TypeCommand), typeof(AuthCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
     internal class SettingsCommand
     {
         [Verb("reset")]
         internal class ResetCommand
         {
 
+        }
+
+        [Verb("type")]
+        [ChildVerbs(typeof(SetCommand), typeof(ShowCommand))]
+        internal class TypeCommand
+        {
+            [Verb("set")]
+            internal class SetCommand
+            {
+                [Option("settings-type", Required = true, Default = SettingsType.Every)]
+                public SettingsType SettingsType { get; set; }
+            }
+
+            [Verb("show")]
+            internal class ShowCommand
+            {
+
+            }
         }
 
         [Verb("auth")]

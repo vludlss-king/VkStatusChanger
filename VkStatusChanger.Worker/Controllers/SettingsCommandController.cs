@@ -13,6 +13,22 @@ namespace VkStatusChanger.Worker.Controllers
             _settingsHelper = settingsHelper;
         }
 
+        public async Task TypeSet(SettingsCommand.TypeCommand.SetCommand command)
+        {
+            var settings = await _settingsHelper.ReadSettings();
+
+            settings.SettingsType = command.SettingsType;
+
+            await _settingsHelper.WriteSettings(settings);
+        }
+
+        public async Task TypeShow(SettingsCommand.TypeCommand.ShowCommand command)
+        {
+            var settings = await _settingsHelper.ReadSettings();
+
+            Console.WriteLine($"Тип настроек: {settings.SettingsType}");
+        }
+
         public async Task AuthSet(SettingsCommand.AuthCommand.SetCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();

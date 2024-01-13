@@ -2,7 +2,7 @@
 
 namespace VkStatusChanger.Worker.Models
 {
-    public class InputArgs
+    public class Authorization
     {
         [Option("access-token", Required = false)]
         public required string? AccessToken { get; set; }

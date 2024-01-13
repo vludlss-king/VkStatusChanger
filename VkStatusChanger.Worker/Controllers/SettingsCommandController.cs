@@ -1,5 +1,5 @@
 ﻿using VkStatusChanger.Worker.Contracts.Helpers;
-using VkStatusChanger.Worker.Models;
+using VkStatusChanger.Worker.Models.Commands;
 using VkStatusChanger.Worker.Models.Settings;
 
 namespace VkStatusChanger.Worker.Controllers

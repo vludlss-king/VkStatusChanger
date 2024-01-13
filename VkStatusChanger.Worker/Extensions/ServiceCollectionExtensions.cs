@@ -25,7 +25,7 @@ namespace VkStatusChanger.Worker.Extensions
         {
             services.AddScoped<IVkApi>(provider =>
             {
-                var inputArgs = provider.GetRequiredService<IOptions<InputArgs>>().Value;
+                var inputArgs = provider.GetRequiredService<IOptions<Authorization>>().Value;
 
                 var vkApi = new VkApi();
 
@@ -128,7 +128,7 @@ namespace VkStatusChanger.Worker.Extensions
             });
 
             configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<InputArgs>();
+                .AddUserSecrets<Authorization>();
             services.AddSingleton(provider =>
             {
                 var env = provider.GetRequiredService<IHostEnvironment>();
@@ -137,9 +137,9 @@ namespace VkStatusChanger.Worker.Extensions
                 var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
 
                 if (env.IsDevelopment())
-                    return Options.Create(configuration.Get<InputArgs>()!);
+                    return Options.Create(configuration.Get<Authorization>()!);
                 else
-                    return Options.Create(new InputArgs { AccessToken = settingsModel.AccessToken });
+                    return Options.Create(new Authorization { AccessToken = settingsModel.AccessToken });
             });
 
             return services;

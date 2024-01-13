@@ -1,11 +1,11 @@
 ﻿using CommandLine;
 using VkStatusChanger.Worker.Extensions;
-using VkStatusChanger.Worker.Models;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using VkStatusChanger.Worker.HostedServices;
 using System.Runtime.CompilerServices;
+using VkStatusChanger.Worker.Models.Commands;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 

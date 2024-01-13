@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Hosting;
 using VkStatusChanger.Worker.Controllers;
-using VkStatusChanger.Worker.Models;
+using VkStatusChanger.Worker.Models.Commands;
 
 namespace VkStatusChanger.Worker.HostedServices
 {

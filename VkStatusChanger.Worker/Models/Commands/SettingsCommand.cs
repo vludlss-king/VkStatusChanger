@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using VkStatusChanger.Worker.Attributes;
 
-namespace VkStatusChanger.Worker.Models
+namespace VkStatusChanger.Worker.Models.Commands
 {
     [Verb("settings")]
     [ChildVerbs(typeof(EveryCommand), typeof(ScheduleCommand))]

@@ -25,6 +25,8 @@ namespace VkStatusChanger.Worker.HostedServices
             await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.EditCommand>(_configCommandController.ScheduleEdit);
             await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.RemoveCommand>(_configCommandController.ScheduleRemove);
             await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.ListCommand>(_configCommandController.ScheduleList);
+
+            Environment.Exit(0);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

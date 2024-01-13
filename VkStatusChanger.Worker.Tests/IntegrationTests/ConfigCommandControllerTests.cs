@@ -16,7 +16,8 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         [Fact]
         public async Task Config_every_set_command_works_properly()
         {
-            var (settingsHelper, sut) = Startup("settings_config_every_set.json");
+            const string fileName = "settings_config_every_set.json";
+            var (settingsHelper, sut) = Startup(fileName);
             SettingsCommand.EveryCommand.SetCommand command = new SettingsCommand.EveryCommand.SetCommand
             {
                 StatusesTexts = new List<string> { "Status1", "Status2", "Status3" },
@@ -26,10 +27,12 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             await sut.EverySet(command);
 
             var settings = await settingsHelper.ReadSettings();
+            if (File.Exists(fileName))
+                File.Delete(fileName);
 
-            settings.Every.StatusesTexts.Should().BeEquivalentTo(command.StatusesTexts);
+            settings.Every!.StatusesTexts.Should().BeEquivalentTo(command.StatusesTexts);
             settings.Every.Seconds.Should().Be(command.Seconds);
-            settings.Schedule.Items.Should().BeEmpty();
+            settings.Schedule!.Items.Should().BeEmpty();
         }
 
         private (ISettingsHelper settingsHelper, ConfigCommandController sut) Startup(string fileName)

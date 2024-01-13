@@ -117,7 +117,7 @@ namespace VkStatusChanger.Worker.Extensions
 
         public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddSingleton(provider => Options.Create(new SettingsFile { FileName = "settings.json" }));
+            services.AddSingleton(provider => Options.Create(new SettingsFile { Name = "settings.json" }));
             services.AddSingleton<ISettingsHelper, SettingsHelper>();
 
             services.AddSingleton(provider =>

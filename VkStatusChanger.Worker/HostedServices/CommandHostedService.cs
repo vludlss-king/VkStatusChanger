@@ -18,13 +18,13 @@ namespace VkStatusChanger.Worker.HostedServices
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _parserResult.WithParsedAsync<Config.Every.Set>(_configCommandController.EverySet);
-            await _parserResult.WithParsedAsync<Config.Every.Show>(_configCommandController.EveryShow);
+            await _parserResult.WithParsedAsync<SettingsCommand.EveryCommand.SetCommand>(_configCommandController.EverySet);
+            await _parserResult.WithParsedAsync<SettingsCommand.EveryCommand.ShowCommand>(_configCommandController.EveryShow);
 
-            await _parserResult.WithParsedAsync<Config.Schedule.Add>(_configCommandController.ScheduleAdd);
-            await _parserResult.WithParsedAsync<Config.Schedule.Edit>(_configCommandController.ScheduleUpdate);
-            await _parserResult.WithParsedAsync<Config.Schedule.Remove>(_configCommandController.ScheduleRemove);
-            await _parserResult.WithParsedAsync<Config.Schedule.List>(_configCommandController.ScheduleList);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.AddCommand>(_configCommandController.ScheduleAdd);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.EditCommand>(_configCommandController.ScheduleUpdate);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.RemoveCommand>(_configCommandController.ScheduleRemove);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.ListCommand>(_configCommandController.ScheduleList);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

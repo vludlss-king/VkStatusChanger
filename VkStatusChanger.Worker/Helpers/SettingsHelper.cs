@@ -14,18 +14,18 @@ namespace VkStatusChanger.Worker.Helpers
         {
             _settingsFile = settingsFile.Value;
 
-            if (!File.Exists(_settingsFile.FileName))
-                File.Create(_settingsFile.FileName!).Dispose();
+            if (!File.Exists(_settingsFile.Name))
+                File.Create(_settingsFile.Name!).Dispose();
         }
 
         public async Task WriteSettings(SettingsModel settings)
         {
-            await File.WriteAllTextAsync(_settingsFile.FileName!, JsonConvert.SerializeObject(settings));
+            await File.WriteAllTextAsync(_settingsFile.Name!, JsonConvert.SerializeObject(settings));
         }
 
         public async Task<SettingsModel> ReadSettings()
         {
-            string settingsJson = await File.ReadAllTextAsync(_settingsFile.FileName!);
+            string settingsJson = await File.ReadAllTextAsync(_settingsFile.Name!);
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
 
             return settingsModel;

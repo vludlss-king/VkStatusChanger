@@ -14,7 +14,7 @@ namespace VkStatusChanger.Worker.Controllers
             _settingsHelper = settingsHelper;
         }
 
-        public async Task EverySet(Config.Every.Set command)
+        public async Task EverySet(SettingsCommand.EveryCommand.SetCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -24,14 +24,14 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task<EveryModel?> EveryShow(Config.Every.Show command)
+        public async Task<EveryModel?> EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
             return settings.Every;
         }
 
-        public async Task ScheduleAdd(Config.Schedule.Add command)
+        public async Task ScheduleAdd(SettingsCommand.ScheduleCommand.AddCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -46,7 +46,7 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task ScheduleUpdate(Config.Schedule.Edit command)
+        public async Task ScheduleUpdate(SettingsCommand.ScheduleCommand.EditCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -59,7 +59,7 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task ScheduleRemove(Config.Schedule.Remove command)
+        public async Task ScheduleRemove(SettingsCommand.ScheduleCommand.RemoveCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -71,7 +71,7 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task<List<ScheduleItem>> ScheduleList(Config.Schedule.List command)
+        public async Task<List<ScheduleItem>> ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 

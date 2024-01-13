@@ -3,7 +3,7 @@
 namespace VkStatusChanger.Worker.Models
 {
     [Verb("start")]
-    internal class Start
+    internal class StartCommand
     {
     }
 }

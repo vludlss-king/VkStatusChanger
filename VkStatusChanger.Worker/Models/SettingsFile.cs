@@ -2,6 +2,9 @@
 {
     internal class SettingsFile
     {
-        public string? FileName { get; set; }
+        /// <summary>
+        /// Название файла вместе с расширением
+        /// </summary>
+        public string? Name { get; set; }
     }
 }

@@ -23,12 +23,12 @@ namespace VkStatusChanger
                     .WriteTo.Console();
             });
 
-            var parserResult = Parser.Default.ParseVerbs<Start, Config>(args);
+            var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);
             builder.Services.AddSingleton(provider => parserResult);
 
-            parserResult.WithParsed<Start>(command => builder.Services.AddJobScheduler());
+            parserResult.WithParsed<StartCommand>(command => builder.Services.AddJobScheduler());
 
-            if(parserResult.TypeInfo.Current != typeof(Start))
+            if(parserResult.TypeInfo.Current != typeof(StartCommand))
                 builder.Services.AddHostedService<CommandHostedService>();
 
             var host = builder.Build();

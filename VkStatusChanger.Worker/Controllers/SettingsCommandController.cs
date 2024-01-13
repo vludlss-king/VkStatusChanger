@@ -23,11 +23,24 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task<EveryModel?> EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
+        public async Task EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            return settings.Every;
+            Console.WriteLine($"Менять каждые {settings.Every.Seconds} секунд, Статусы:");
+
+            if (!settings.Every.StatusesTexts!.Any())
+            {
+                Console.WriteLine("отсутствуют");
+            }
+            else
+            {
+                for(int index = 0; index < settings.Every.StatusesTexts.Count; index++)
+                {
+                    var statusText = settings.Every.StatusesTexts[index];
+                    Console.WriteLine($"{index + 1}. {statusText}");
+                }
+            }
         }
 
         public async Task ScheduleAdd(SettingsCommand.ScheduleCommand.AddCommand command)

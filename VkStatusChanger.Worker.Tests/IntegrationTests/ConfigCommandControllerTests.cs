@@ -36,7 +36,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_schedule_add_command_works_property()
+        public async Task Settings_schedule_add_command_works_properly()
         {
             const string fileName = "settings_schedule_add.json";
             var (settingsHelper, sut) = Startup(fileName);
@@ -53,11 +53,48 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            settings.Schedule.Items.Count.Should().Be(1);
+            settings.Schedule!.Items!.Count.Should().Be(1);
             settings.Schedule.Items.First().StatusText.Should().Be(command.StatusText);
             settings.Schedule.Items.First().Date.Should().Be(command.Date);
             settings.Schedule.Items.First().Time.Should().Be(command.Time);
-            settings.Every.StatusesTexts.Count.Should().Be(0);
+            settings.Every!.StatusesTexts!.Count.Should().Be(0);
+            settings.Every.Seconds.Should().Be(0);
+        }
+
+        [Fact]
+        public async Task Settings_schedule_edit_command_works_properly()
+        {
+            // Arrange
+            const string fileName = "settings_schedule_add.json";
+            var (settingsHelper, sut) = Startup(fileName);
+            SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
+            {
+                StatusText = "Status1",
+                Date = new DateTime(2024, 1, 13),
+                Time = new TimeSpan(6, 5, 30),
+            };
+            await sut.ScheduleAdd(addCommand);
+
+            // Act
+            SettingsCommand.ScheduleCommand.EditCommand editCommand = new SettingsCommand.ScheduleCommand.EditCommand
+            {
+                Id = 1,
+                StatusText = "Edited",
+                Date = new DateTime(2024, 2, 13),
+                Time = new TimeSpan(7, 5, 30),
+            };
+            await sut.ScheduleUpdate(editCommand);
+
+            var settings = await settingsHelper.ReadSettings();
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            // Assert
+            settings.Schedule!.Items!.Count.Should().Be(1);
+            settings.Schedule.Items.First().StatusText.Should().Be(editCommand.StatusText);
+            settings.Schedule.Items.First().Date.Should().Be(editCommand.Date);
+            settings.Schedule.Items.First().Time.Should().Be(editCommand.Time);
+            settings.Every!.StatusesTexts!.Count.Should().Be(0);
             settings.Every.Seconds.Should().Be(0);
         }
 

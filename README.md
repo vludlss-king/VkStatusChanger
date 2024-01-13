@@ -1,5 +1,5 @@
 **Версия сервиса:**
-1.0.0 (прототип)
+1.0.1 (прототип)
 
 **История изменений:**
 [Посмотреть](https://github.com/vludlss-king/VkStatusChanger/blob/main/CHANGELOG.md)
@@ -18,46 +18,56 @@
 - Serilog
 - VkNet
 
+**Тестирование:**
+- xUnit
+- Moq
+- FluentAssertions
+
 **Авторизация:**
-Чтобы приложение выполняло свою работу корректно, ему необходимо передать параметр **AccessToken** через аргументы командной строки при запуске сервиса:
+Чтобы приложение выполняло свою работу корректно, ему необходимо передать параметр **AccessToken**, который можно получить при создании приложения ВКонтакте.
 
-```--access-token {token}```
+**Команды: (Windows PowerShell)**
+1. Сбросить настройки
 
-**Пример настройки settings.json:**
-```
-{
-    "Every": {
-        "StatusesTexts": [
-            "Статус (автосмена 1)",
-            "Статус (автосмена 2)",
-            "Статус (автосмена 3)"
-        ],
-        "Seconds": 60
-    },
-    "Schedule": {
-        "Items": [
-            {
-                "StatusText": "Статус (автосмена 1)",
-                "Date": "2024-01-11",
-                "Time": "05:22:00"
-            },
-            {
-                "StatusText": "Статус (автосмена 2)",
-                "Date": "2024-01-11",
-                "Time": "05:16:30"
-            },
-            {
-                "StatusText": "Статус (автосмена 3)",
-                "Date": "2024-01-11",
-                "Time": "05:17:00"
-            }
-        ]
-    }
-}
-```
+```.\VkStatusChanger.Worker.exe settings reset```
 
-Заполнить можно только одно из двух полей: **Every** либо **Schedule**.
+2. Выбрать тип настроек (Every либо Schedule)
 
-Поле **Every.StatusesTexts** хранит массив статусов, которые будут меняться по очереди каждые **Every.Seconds** секунд.
+```.\VkStatusChanger.Worker.exe settings type set --settings-type {value}```
 
-Поле **Schedule.Items** хранит массив, каждый элемент которого содержит поля **StatusText** (какой статус установить), **Date** (в какую дату начать выполнение смены статуса), **Time** (в какое время начать по указанной **Date** дате)
+3. Просмотреть текущий тип настроек
+
+```.\VkStatusChanger.Worker.exe settings type show```
+
+4. Установить ключ доступа для VK API
+
+```.\VkStatusChanger.Worker.exe settings auth set --access-token {value}```
+
+5. Просмотреть текущий токен доступа для VK API
+
+```.\VkStatusChanger.Worker.exe settings auth show```
+
+6. Установить смену статусов по секундам
+
+```.\VkStatusChanger.Worker.exe settings every set --statuses-texts "text1","text2","text3" --seconds 30```
+
+7. Просмотреть текущие настройки статусов по секундам
+
+```.\VkStatusChanger.Worker.exe settings every show```
+
+8. Добавить расписание на смену статуса
+
+```.\VkStatusChanger.Worker.exe settings schedule add --status-text {value} --date {value} --time {value}```
+
+9. Редактировать расписание на смену статуса
+
+```.\VkStatusChanger.Worker.exe settings schedule edit --id 1 --status-text {value} --date {value} --time {value}```
+
+10. Удалить расписание на смену статуса
+
+```.\VkStatusChanger.Worker.exe settings schedule remove --id 1```
+
+11. Показать текущий список расписаний
+
+```.\VkStatusChanger.Worker.exe settings schedule list```
+

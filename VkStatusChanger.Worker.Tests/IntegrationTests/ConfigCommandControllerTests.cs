@@ -42,7 +42,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             SettingsCommand.ScheduleCommand.AddCommand command = new SettingsCommand.ScheduleCommand.AddCommand
             {
-                StatusText = "Status1",
+                StatusText = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
@@ -69,7 +69,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
             {
-                StatusText = "Status1",
+                StatusText = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
@@ -107,7 +107,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
             {
-                StatusText = "Status1",
+                StatusText = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
@@ -131,7 +131,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             settings.Every.Seconds.Should().Be(0);
         }
 
-        private (ISettingsHelper settingsHelper, ConfigCommandController sut) Startup(string fileName)
+        private (ISettingsHelper settingsHelper, SettingsCommandController sut) Startup(string fileName)
         {
             var settingsFileStub = new Mock<IOptions<SettingsFile>>();
             settingsFileStub
@@ -139,7 +139,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 .Returns(new SettingsFile { Name = fileName });
 
             var settingsHelper = new SettingsHelper(settingsFileStub.Object);
-            var sut = new ConfigCommandController(settingsHelper);
+            var sut = new SettingsCommandController(settingsHelper);
 
             return (settingsHelper, sut);
         }

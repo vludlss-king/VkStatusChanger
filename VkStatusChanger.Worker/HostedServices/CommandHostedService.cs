@@ -8,9 +8,9 @@ namespace VkStatusChanger.Worker.HostedServices
     internal class CommandHostedService : IHostedService
     {
         private readonly ParserResult<object> _parserResult;
-        private readonly ConfigCommandController _configCommandController;
+        private readonly SettingsCommandController _configCommandController;
 
-        public CommandHostedService(ParserResult<object> parserResult, ConfigCommandController configCommandController)
+        public CommandHostedService(ParserResult<object> parserResult, SettingsCommandController configCommandController)
         {
             _parserResult = parserResult;
             _configCommandController = configCommandController;    

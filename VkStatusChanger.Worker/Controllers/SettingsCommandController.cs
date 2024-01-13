@@ -1,15 +1,14 @@
 ﻿using VkStatusChanger.Worker.Contracts.Helpers;
-using VkStatusChanger.Worker.Helpers;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Settings;
 
 namespace VkStatusChanger.Worker.Controllers
 {
-    internal class ConfigCommandController
+    internal class SettingsCommandController
     {
         private readonly ISettingsHelper _settingsHelper;
 
-        public ConfigCommandController(ISettingsHelper settingsHelper)
+        public SettingsCommandController(ISettingsHelper settingsHelper)
         {
             _settingsHelper = settingsHelper;
         }
@@ -18,7 +17,7 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            settings.Every.StatusesTexts = command.StatusesTexts.ToList();
+            settings.Every!.StatusesTexts = command.StatusesTexts.ToList();
             settings.Every.Seconds = command.Seconds;
 
             await _settingsHelper.WriteSettings(settings);
@@ -41,7 +40,7 @@ namespace VkStatusChanger.Worker.Controllers
                 Date = command.Date,
                 Time = command.Time,
             };
-            settings.Schedule.Items.Add(scheduleItem);
+            settings.Schedule!.Items!.Add(scheduleItem);
 
             await _settingsHelper.WriteSettings(settings);
         }
@@ -64,9 +63,9 @@ namespace VkStatusChanger.Worker.Controllers
             var settings = await _settingsHelper.ReadSettings();
 
             if (command.Id.HasValue)
-                settings.Schedule.Items.RemoveAt(command.Id.Value - 1);
+                settings.Schedule!.Items!.RemoveAt(command.Id.Value - 1);
             else
-                settings.Schedule.Items.RemoveAll(_ => true);
+                settings.Schedule!.Items!.RemoveAll(_ => true);
 
             await _settingsHelper.WriteSettings(settings);
         }
@@ -75,7 +74,7 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            return settings.Schedule.Items;
+            return settings.Schedule!.Items!;
         }
     }
 }

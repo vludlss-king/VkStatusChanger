@@ -4,13 +4,31 @@ using VkStatusChanger.Worker.Attributes;
 namespace VkStatusChanger.Worker.Models.Commands
 {
     [Verb("settings")]
-    [ChildVerbs(typeof(ResetCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
+    [ChildVerbs(typeof(ResetCommand), typeof(AuthCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
     internal class SettingsCommand
     {
         [Verb("reset")]
         internal class ResetCommand
         {
 
+        }
+
+        [Verb("auth")]
+        [ChildVerbs(typeof(SetCommand), typeof(ShowCommand))]
+        internal class AuthCommand
+        {
+            [Verb("set")]
+            internal class SetCommand
+            {
+                [Option("access-token", Required = true)]
+                public string? AccessToken { get; set; }
+            }
+
+            [Verb("show")]
+            internal class ShowCommand
+            {
+
+            }
         }
 
         [Verb("every")]

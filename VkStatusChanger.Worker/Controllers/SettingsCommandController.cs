@@ -13,6 +13,26 @@ namespace VkStatusChanger.Worker.Controllers
             _settingsHelper = settingsHelper;
         }
 
+        public async Task AuthSet(SettingsCommand.AuthCommand.SetCommand command)
+        {
+            var settings = await _settingsHelper.ReadSettings();
+
+            settings.AccessToken = command.AccessToken;
+
+            await _settingsHelper.WriteSettings(settings);
+        }
+
+        public async Task AuthShow(SettingsCommand.AuthCommand.ShowCommand command)
+        {
+            var settings = await _settingsHelper.ReadSettings();
+
+            var token = string.IsNullOrWhiteSpace(settings.AccessToken)
+                ? "отсутствует"
+                : settings.AccessToken;
+
+            Console.WriteLine($"Токен авторизации: {token}");
+        }
+
         public void Reset(SettingsCommand.ResetCommand command)
         {
             _settingsHelper.ResetSettings();

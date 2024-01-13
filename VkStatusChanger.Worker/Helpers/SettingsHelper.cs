@@ -30,5 +30,14 @@ namespace VkStatusChanger.Worker.Helpers
 
             return settingsModel;
         }
+
+        public void ResetSettings()
+        {
+            if (File.Exists(_settingsFile.Name))
+            {
+                File.Delete(_settingsFile.Name);
+                File.Create(_settingsFile.Name!).Dispose();
+            }
+        }
     }
 }

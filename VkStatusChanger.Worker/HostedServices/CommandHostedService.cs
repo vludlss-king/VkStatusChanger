@@ -18,6 +18,8 @@ namespace VkStatusChanger.Worker.HostedServices
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            _parserResult.WithParsed<SettingsCommand.ResetCommand>(_configCommandController.Reset);
+
             await _parserResult.WithParsedAsync<SettingsCommand.EveryCommand.SetCommand>(_configCommandController.EverySet);
             await _parserResult.WithParsedAsync<SettingsCommand.EveryCommand.ShowCommand>(_configCommandController.EveryShow);
 

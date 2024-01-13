@@ -4,9 +4,15 @@ using VkStatusChanger.Worker.Attributes;
 namespace VkStatusChanger.Worker.Models.Commands
 {
     [Verb("settings")]
-    [ChildVerbs(typeof(EveryCommand), typeof(ScheduleCommand))]
+    [ChildVerbs(typeof(ResetCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
     internal class SettingsCommand
     {
+        [Verb("reset")]
+        internal class ResetCommand
+        {
+
+        }
+
         [Verb("every")]
         [ChildVerbs(typeof(ShowCommand), typeof(SetCommand))]
         internal class EveryCommand

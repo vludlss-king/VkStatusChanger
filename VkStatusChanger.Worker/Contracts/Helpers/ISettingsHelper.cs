@@ -6,5 +6,6 @@ namespace VkStatusChanger.Worker.Contracts.Helpers
     {
         Task WriteSettings(SettingsModel settings);
         Task<SettingsModel> ReadSettings();
+        void ResetSettings();
     }
 }

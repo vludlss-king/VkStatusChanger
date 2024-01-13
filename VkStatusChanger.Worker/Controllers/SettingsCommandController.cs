@@ -13,6 +13,13 @@ namespace VkStatusChanger.Worker.Controllers
             _settingsHelper = settingsHelper;
         }
 
+        public void Reset(SettingsCommand.ResetCommand command)
+        {
+            _settingsHelper.ResetSettings();
+
+            Console.WriteLine("Настройки сброшены.");
+        }
+
         public async Task EverySet(SettingsCommand.EveryCommand.SetCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();

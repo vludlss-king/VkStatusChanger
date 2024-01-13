@@ -3,6 +3,7 @@ using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Helpers;
 using VkStatusChanger.Worker.Models;
+using VkStatusChanger.Worker.Models.Commands;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
@@ -11,6 +12,28 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         public ConfigCommandControllerTests()
         {
             
+        }
+
+        [Fact]
+        public async Task Settings_auth_set_command_works_properly()
+        {
+            const string fileName = "settings_auth_set.json";
+            var (settingsHelper, sut) = Startup(fileName);
+            SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand
+            {
+                AccessToken = "NewAccessToken"
+            };
+
+            await sut.AuthSet(command);
+
+            var settings = await settingsHelper.ReadSettings();
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            settings.AccessToken.Should().Be(command.AccessToken);
+            settings.Every!.StatusesTexts!.Count.Should().Be(0);
+            settings.Every.Seconds.Should().Be(0);
+            settings.Schedule!.Items!.Count.Should().Be(0);
         }
 
         [Fact]

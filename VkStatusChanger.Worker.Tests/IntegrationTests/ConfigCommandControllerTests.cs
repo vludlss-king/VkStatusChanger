@@ -65,7 +65,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         public async Task Settings_schedule_edit_command_works_properly()
         {
             // Arrange
-            const string fileName = "settings_schedule_add.json";
+            const string fileName = "settings_schedule_edit.json";
             var (settingsHelper, sut) = Startup(fileName);
             SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
             {
@@ -75,7 +75,6 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
             await sut.ScheduleAdd(addCommand);
 
-            // Act
             SettingsCommand.ScheduleCommand.EditCommand editCommand = new SettingsCommand.ScheduleCommand.EditCommand
             {
                 Id = 1,
@@ -83,6 +82,8 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Date = new DateTime(2024, 2, 13),
                 Time = new TimeSpan(7, 5, 30),
             };
+
+            // Act
             await sut.ScheduleUpdate(editCommand);
 
             var settings = await settingsHelper.ReadSettings();
@@ -94,6 +95,38 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             settings.Schedule.Items.First().StatusText.Should().Be(editCommand.StatusText);
             settings.Schedule.Items.First().Date.Should().Be(editCommand.Date);
             settings.Schedule.Items.First().Time.Should().Be(editCommand.Time);
+            settings.Every!.StatusesTexts!.Count.Should().Be(0);
+            settings.Every.Seconds.Should().Be(0);
+        }
+
+        [Fact]
+        public async Task Settings_schedule_remove_command_works_properly()
+        {
+            // Arrange
+            const string fileName = "settings_schedule_remove.json";
+            var (settingsHelper, sut) = Startup(fileName);
+            SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
+            {
+                StatusText = "Status1",
+                Date = new DateTime(2024, 1, 13),
+                Time = new TimeSpan(6, 5, 30),
+            };
+            await sut.ScheduleAdd(addCommand);
+
+            SettingsCommand.ScheduleCommand.RemoveCommand removeCommand = new SettingsCommand.ScheduleCommand.RemoveCommand
+            {
+                Id = 1
+            };
+
+            // Act
+            await sut.ScheduleRemove(removeCommand);
+
+            var settings = await settingsHelper.ReadSettings();
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            // Assert
+            settings.Schedule!.Items!.Count.Should().Be(0);
             settings.Every!.StatusesTexts!.Count.Should().Be(0);
             settings.Every.Seconds.Should().Be(0);
         }

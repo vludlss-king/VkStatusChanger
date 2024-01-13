@@ -71,3 +71,6 @@
 
 ```.\VkStatusChanger.Worker.exe settings schedule list```
 
+12. Запустить
+```.\VkStatusChanger.Worker.exe start```
+

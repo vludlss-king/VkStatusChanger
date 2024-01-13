@@ -45,7 +45,7 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task ScheduleUpdate(SettingsCommand.ScheduleCommand.EditCommand command)
+        public async Task ScheduleEdit(SettingsCommand.ScheduleCommand.EditCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 

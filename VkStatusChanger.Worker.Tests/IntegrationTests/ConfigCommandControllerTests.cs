@@ -84,7 +84,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.ScheduleUpdate(editCommand);
+            await sut.ScheduleEdit(editCommand);
 
             var settings = await settingsHelper.ReadSettings();
             if (File.Exists(fileName))

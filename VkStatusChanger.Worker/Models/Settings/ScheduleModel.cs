@@ -2,6 +2,6 @@
 {
     internal class ScheduleModel
     {
-        public List<ScheduleItem>? Items { get; set; }
+        public List<ScheduleItem>? Items { get; set; } = new();
     }
 }

@@ -2,7 +2,7 @@
 {
     internal class EveryModel
     {
-        public List<string>? StatusesTexts { get; set; }
+        public List<string>? StatusesTexts { get; set; } = new();
         public int Seconds { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace VkStatusChanger.Worker.Models
 {
-    internal class SettingsFile
+    public class SettingsFile
     {
         /// <summary>
         /// Название файла вместе с расширением

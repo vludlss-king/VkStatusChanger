@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VkStatusChanger.Worker\VkStatusChanger.Worker.csproj" />
+  </ItemGroup>
+
 </Project>

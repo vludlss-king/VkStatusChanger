@@ -1,54 +1,43 @@
 ﻿using CommandLine;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using VkStatusChanger.Worker.Extensions;
-using VkStatusChanger.Worker.Models;
-using VkStatusChanger.Worker.Models.Settings;
+using Microsoft.Extensions.Hosting;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
+using VkStatusChanger.Worker.HostedServices;
+using System.Runtime.CompilerServices;
+using VkStatusChanger.Worker.Models.Commands;
+
+[assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
 namespace VkStatusChanger
 {
     internal class Program
     {
-        const string settingsFileName = "settings.json";
-
         static async Task Main(string[] args)
         {
-            await Parser.Default.ParseArguments<InputArgs>(args)
-                .WithParsedAsync(async inputArgs =>
-                {
-                    Initialize();
+            var builder = Host.CreateApplicationBuilder(args);
 
-                    var builder = Host.CreateApplicationBuilder(args);
+            builder.Services.AddConfiguration(builder.Configuration);
+            builder.Services.AddVkHttpClient();
+            builder.Services.AddControllers();
+            builder.Services.AddSerilog(cfg =>
+            {
+                cfg.Enrich.FromLogContext()
+                    .WriteTo.Console();
+            });
 
-                    var settingsModel = ReadSettings();
-                    builder.Services.AddConfiguration(builder.Configuration, settingsModel, inputArgs);
-                    builder.Services.AddVkHttpClient();
-                    builder.Services.AddJobScheduler(settingsModel);
-                    builder.Services.AddSerilog(cfg =>
-                    {
-                        cfg.Enrich.FromLogContext()
-                            .WriteTo.Console();
-                    });
+            var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);
+            builder.Services.AddSingleton(provider => parserResult);
 
-                    var host = builder.Build();
-                    await host.RunAsync();
-                });
-        }
+            parserResult.WithParsed<StartCommand>(command => builder.Services.AddJobScheduler());
 
-        static void Initialize()
-        {
-            if(!File.Exists(settingsFileName))
-                File.Create(settingsFileName).Dispose();
-        }
+            if(parserResult.TypeInfo.Current != typeof(StartCommand))
+                builder.Services.AddHostedService<CommandHostedService>();
 
-        static SettingsModel ReadSettings()
-        {
-            string settingsJson = File.ReadAllText(settingsFileName);
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
+            var host = builder.Build();
+            await host.RunAsync();
 
-            return settingsModel;
+            Console.ReadKey();
         }
     }
 }

@@ -2,6 +2,9 @@
 {
     internal class ScheduleModel
     {
-        public List<ScheduleItem>? Items { get; set; }
+        /// <summary>
+        /// Расписания смены статусов
+        /// </summary>
+        public List<ScheduleItem>? Items { get; set; } = new();
     }
 }

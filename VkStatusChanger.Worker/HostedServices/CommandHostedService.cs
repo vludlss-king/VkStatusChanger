@@ -1,0 +1,44 @@
+﻿using CommandLine;
+using Microsoft.Extensions.Hosting;
+using VkStatusChanger.Worker.Controllers;
+using VkStatusChanger.Worker.Models.Commands;
+
+namespace VkStatusChanger.Worker.HostedServices
+{
+    internal class CommandHostedService : IHostedService
+    {
+        private readonly ParserResult<object> _parserResult;
+        private readonly SettingsCommandController _configCommandController;
+
+        public CommandHostedService(ParserResult<object> parserResult, SettingsCommandController configCommandController)
+        {
+            _parserResult = parserResult;
+            _configCommandController = configCommandController;    
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            _parserResult.WithParsed<SettingsCommand.ResetCommand>(_configCommandController.Reset);
+            await _parserResult.WithParsedAsync<SettingsCommand.TypeCommand.SetCommand>(_configCommandController.TypeSet);
+            await _parserResult.WithParsedAsync<SettingsCommand.TypeCommand.ShowCommand>(_configCommandController.TypeShow);
+
+            await _parserResult.WithParsedAsync<SettingsCommand.AuthCommand.SetCommand>(_configCommandController.AuthSet);
+            await _parserResult.WithParsedAsync<SettingsCommand.AuthCommand.ShowCommand>(_configCommandController.AuthShow);
+
+            await _parserResult.WithParsedAsync<SettingsCommand.EveryCommand.SetCommand>(_configCommandController.EverySet);
+            await _parserResult.WithParsedAsync<SettingsCommand.EveryCommand.ShowCommand>(_configCommandController.EveryShow);
+
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.AddCommand>(_configCommandController.ScheduleAdd);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.EditCommand>(_configCommandController.ScheduleEdit);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.RemoveCommand>(_configCommandController.ScheduleRemove);
+            await _parserResult.WithParsedAsync<SettingsCommand.ScheduleCommand.ListCommand>(_configCommandController.ScheduleList);
+
+            Environment.Exit(0);
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+    }
+}

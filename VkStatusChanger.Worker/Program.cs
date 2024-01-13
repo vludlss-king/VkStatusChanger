@@ -5,6 +5,9 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using VkStatusChanger.Worker.HostedServices;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
 namespace VkStatusChanger
 {

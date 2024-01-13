@@ -10,14 +10,9 @@ namespace VkStatusChanger
 {
     internal class Program
     {
-        const string settingsFileName = "settings.json";
-
         static async Task Main(string[] args)
         {
-            var parserResult = Parser.Default.ParseVerbs<Start, Config>(args);
-
-            Initialize();
-            var builder = Host.CreateApplicationBuilder();
+            var builder = Host.CreateApplicationBuilder(args);
 
             builder.Services.AddConfiguration(builder.Configuration);
             builder.Services.AddVkHttpClient();
@@ -28,6 +23,7 @@ namespace VkStatusChanger
                     .WriteTo.Console();
             });
 
+            var parserResult = Parser.Default.ParseVerbs<Start, Config>(args);
             builder.Services.AddSingleton(provider => parserResult);
 
             parserResult.WithParsed<Start>(command => builder.Services.AddJobScheduler());
@@ -39,12 +35,6 @@ namespace VkStatusChanger
             await host.RunAsync();
 
             Console.ReadKey();
-        }
-
-        private static void Initialize()
-        {
-            if (!File.Exists(settingsFileName))
-                File.Create(settingsFileName).Dispose();
         }
     }
 }

@@ -6,11 +6,16 @@ namespace VkStatusChanger.Worker.Helpers
 {
     internal class SettingsHelper : ISettingsHelper
     {
+        const string settingsFileName = "settings.json";
+
         private readonly ISettingsGet _settingsGet;
 
         public SettingsHelper(ISettingsGet settingsGet)
         {
-            _settingsGet = settingsGet;    
+            _settingsGet = settingsGet;
+
+            if (!File.Exists(settingsFileName))
+                File.Create(settingsFileName).Dispose();
         }
 
         public async Task WriteSettings(SettingsModel settings)

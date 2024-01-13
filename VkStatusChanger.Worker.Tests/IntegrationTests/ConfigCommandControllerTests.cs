@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Options;
-using Moq;
+﻿using Microsoft.Extensions.Options;
 using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Helpers;

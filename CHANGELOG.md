@@ -37,6 +37,7 @@
   - settings schedule edit --id 1 --status-text {value} --date {value} --time {value}
   - settings schedule remove --id 1
   - settings schedule list
+  - start
 
 ### Changed
 

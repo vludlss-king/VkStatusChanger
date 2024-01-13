@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Controllers;
+using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Helpers;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Commands;
@@ -31,6 +32,28 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 File.Delete(fileName);
 
             settings.AccessToken.Should().Be(command.AccessToken);
+            settings.Every!.StatusesTexts!.Count.Should().Be(0);
+            settings.Every.Seconds.Should().Be(0);
+            settings.Schedule!.Items!.Count.Should().Be(0);
+        }
+
+        [Fact]
+        public async Task Settings_type_set_command_works_properly()
+        {
+            const string fileName = "settings_type_set.json";
+            var (settingsHelper, sut) = Startup(fileName);
+            SettingsCommand.TypeCommand.SetCommand command = new SettingsCommand.TypeCommand.SetCommand
+            {
+                SettingsType = SettingsType.Schedule
+            };
+
+            await sut.TypeSet(command);
+
+            var settings = await settingsHelper.ReadSettings();
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            settings.SettingsType.Should().Be(command.SettingsType);
             settings.Every!.StatusesTexts!.Count.Should().Be(0);
             settings.Every.Seconds.Should().Be(0);
             settings.Schedule!.Items!.Count.Should().Be(0);

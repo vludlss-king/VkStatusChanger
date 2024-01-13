@@ -70,11 +70,15 @@ namespace VkStatusChanger.Worker.Controllers
             await _settingsHelper.WriteSettings(settings);
         }
 
-        public async Task<List<ScheduleItem>> ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
+        public async Task ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
-
-            return settings.Schedule!.Items!;
+            
+            for(int index = 0; index < settings.Schedule!.Items!.Count; index++)
+            {
+                var scheduleItem = settings.Schedule.Items[index];
+                Console.WriteLine($"{index + 1}. Статус: {scheduleItem.StatusText}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}");
+            }
         }
     }
 }

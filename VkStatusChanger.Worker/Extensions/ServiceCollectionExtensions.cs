@@ -13,6 +13,9 @@ using Microsoft.Extensions.Hosting;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure.HttpClients;
 using VkStatusChanger.Worker.Enums;
+using VkStatusChanger.Worker.Contracts.Helpers;
+using VkStatusChanger.Worker.Helpers;
+using VkStatusChanger.Worker.Controllers;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -41,12 +44,16 @@ namespace VkStatusChanger.Worker.Extensions
             return services;
         }
 
-        public static IServiceCollection AddJobScheduler(this IServiceCollection services, SettingsModel settingsModel)
+        public static IServiceCollection AddJobScheduler(this IServiceCollection services)
         {
             services.AddQuartz(quartzCfg =>
             {
                 quartzCfg.UseInMemoryStore();
                 quartzCfg.UseDefaultThreadPool(1);
+
+                var provider = services.BuildServiceProvider();
+                var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
+                var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
 
                 const string jobDataKey = "statusText";
                 switch (settingsModel.SettingsType)
@@ -108,9 +115,17 @@ namespace VkStatusChanger.Worker.Extensions
             return services;
         }
 
-        public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration, SettingsModel settingsModel, InputArgs inputArgs)
+        public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddSingleton(provider => Options.Create(settingsModel));
+            services.AddSingleton<ISettingsGet, SettingsGet>(provider => new SettingsGet { SettingsFile = "settings.json" });
+            services.AddSingleton<ISettingsHelper, SettingsHelper>();
+
+            services.AddSingleton(provider =>
+            {
+                var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
+                var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
+                return Options.Create(settingsModel);
+            });
 
             configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddUserSecrets<InputArgs>();
@@ -118,12 +133,21 @@ namespace VkStatusChanger.Worker.Extensions
             {
                 var env = provider.GetRequiredService<IHostEnvironment>();
                 var configuration = provider.GetRequiredService<IConfiguration>();
+                var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
+                var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
 
                 if (env.IsDevelopment())
                     return Options.Create(configuration.Get<InputArgs>()!);
                 else
-                    return Options.Create(inputArgs);
+                    return Options.Create(new InputArgs { AccessToken = settingsModel.AccessToken });
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddControllers(this IServiceCollection services)
+        {
+            services.AddSingleton<ConfigCommandController>();
 
             return services;
         }

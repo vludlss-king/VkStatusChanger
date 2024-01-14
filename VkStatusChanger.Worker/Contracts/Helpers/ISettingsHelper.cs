@@ -2,7 +2,7 @@
 
 namespace VkStatusChanger.Worker.Contracts.Helpers
 {
-    internal interface ISettingsHelper
+    public interface ISettingsHelper
     {
         Task WriteSettings(SettingsModel settings);
         Task<SettingsModel> ReadSettings();

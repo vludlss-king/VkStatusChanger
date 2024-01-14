@@ -2,7 +2,7 @@
 
 namespace VkStatusChanger.Worker.Models.Settings
 {
-    internal class SettingsModel
+    public class SettingsModel
     {
         /// <summary>
         /// Токен для входа в клиент VK API

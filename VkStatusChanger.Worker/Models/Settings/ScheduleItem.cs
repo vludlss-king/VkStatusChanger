@@ -1,6 +1,6 @@
 ﻿namespace VkStatusChanger.Worker.Models.Settings
 {
-    internal class ScheduleItem
+    public class ScheduleItem
     {
         /// <summary>
         /// Текст статуса

@@ -93,7 +93,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         }
 
         [Fact]
-        public async Task Settings_reset_command_shows_expected_output()
+        public void Settings_reset_command_shows_expected_output()
         {
             const string accessToken = "NewAccessToken";
             var parserResultStub = new Mock<ICustomParserResult>();
@@ -110,6 +110,33 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var output = sut.Reset(command);
 
             output.Should().Be("Настройки сброшены.");
+        }
+
+        [Fact]
+        public async Task Settings_every_set_command_shows_expected_output()
+        {
+            var parserResultStub = new Mock<ICustomParserResult>();
+            var settingsHelperStub = new Mock<ISettingsHelper>();
+            settingsHelperStub
+                .Setup(setup => setup.ReadSettings())
+                .Returns(Task.FromResult(new SettingsModel()
+                {
+                    Every = new EveryModel
+                    {
+                        StatusesTexts = new List<string> { "Status1" },
+                        Seconds = 30,
+                    }
+                }));
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            SettingsCommand.EveryCommand.SetCommand command = new SettingsCommand.EveryCommand.SetCommand()
+            {
+                StatusesTexts = new List<string> { "Status1" },
+                Seconds = 30,
+            };
+
+            var output = await sut.EverySet(command);
+
+            output.Should().Be("Настройки Every изменены.");
         }
     }
 }

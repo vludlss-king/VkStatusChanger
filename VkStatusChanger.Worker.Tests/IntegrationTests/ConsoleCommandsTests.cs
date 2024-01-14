@@ -52,6 +52,24 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             output.Should().Be("Токен авторизации изменён.");
         }
 
+        [Fact]
+        public async Task Settings_auth_show_command_shows_expected_output_to_console()
+        {
+            // Arrange
+            const string authSetCommand = "settings auth set --access-token NewAccessToken";
+            await StartProcess(authSetCommand);
+
+            const string authShowCommand = "settings auth show";
+            var sut = await StartProcess(authShowCommand);
+            RestoreSettings();
+            
+            // Act
+            var output = await sut!.StandardOutput.ReadLineAsync();
+
+            // Assert
+            output.Should().Be("Токен авторизации: NewAccessToken");
+        }
+
         private async Task<Process?> StartProcess(string command)
         {
             if(!File.Exists(settingsBufferFile))

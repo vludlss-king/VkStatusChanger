@@ -1,32 +1,33 @@
 ﻿using CommandLine;
 using VkStatusChanger.Worker.Attributes;
 using VkStatusChanger.Worker.Enums;
+using VkStatusChanger.Worker.Models.Commands.Common;
 
 namespace VkStatusChanger.Worker.Models.Commands
 {
     [Verb("settings")]
     [ChildVerbs(typeof(ResetCommand), typeof(TypeCommand), typeof(AuthCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
-    internal class SettingsCommand
+    internal class SettingsCommand : Command
     {
         [Verb("reset")]
-        internal class ResetCommand
+        internal class ResetCommand : Command
         {
 
         }
 
         [Verb("type")]
         [ChildVerbs(typeof(SetCommand), typeof(ShowCommand))]
-        internal class TypeCommand
+        internal class TypeCommand : Command
         {
             [Verb("set")]
-            internal class SetCommand
+            internal class SetCommand : Command
             {
                 [Option("settings-type", Required = true, Default = SettingsType.Every)]
                 public SettingsType SettingsType { get; set; }
             }
 
             [Verb("show")]
-            internal class ShowCommand
+            internal class ShowCommand : Command
             {
 
             }
@@ -34,17 +35,17 @@ namespace VkStatusChanger.Worker.Models.Commands
 
         [Verb("auth")]
         [ChildVerbs(typeof(SetCommand), typeof(ShowCommand))]
-        internal class AuthCommand
+        internal class AuthCommand : Command
         {
             [Verb("set")]
-            internal class SetCommand
+            internal class SetCommand : Command
             {
                 [Option("access-token", Required = true)]
                 public string? AccessToken { get; set; }
             }
 
             [Verb("show")]
-            internal class ShowCommand
+            internal class ShowCommand : Command
             {
 
             }
@@ -52,10 +53,10 @@ namespace VkStatusChanger.Worker.Models.Commands
 
         [Verb("every")]
         [ChildVerbs(typeof(ShowCommand), typeof(SetCommand))]
-        internal class EveryCommand
+        internal class EveryCommand : Command
         {
             [Verb("set")]
-            internal class SetCommand
+            internal class SetCommand : Command
             {
                 [Option("statuses-texts", Required = true, Separator = ',')]
                 public IEnumerable<string> StatusesTexts { get; set; }
@@ -64,7 +65,7 @@ namespace VkStatusChanger.Worker.Models.Commands
             }
 
             [Verb("show")]
-            internal class ShowCommand
+            internal class ShowCommand : Command
             {
 
             }
@@ -72,10 +73,10 @@ namespace VkStatusChanger.Worker.Models.Commands
 
         [Verb("schedule")]
         [ChildVerbs(typeof(AddCommand), typeof(EditCommand), typeof(RemoveCommand), typeof(ListCommand))]
-        internal class ScheduleCommand
+        internal class ScheduleCommand : Command
         {
             [Verb("add")]
-            internal class AddCommand
+            internal class AddCommand : Command
             {
                 [Option("status-text", Required = true)]
                 public string StatusText { get; set; }
@@ -86,7 +87,7 @@ namespace VkStatusChanger.Worker.Models.Commands
             }
 
             [Verb("edit")]
-            internal class EditCommand
+            internal class EditCommand : Command
             {
                 [Option("id", Required = true)]
                 public int Id { get; set; }
@@ -99,14 +100,14 @@ namespace VkStatusChanger.Worker.Models.Commands
             }
 
             [Verb("remove")]
-            internal class RemoveCommand
+            internal class RemoveCommand : Command
             {
                 [Option("id", Required = false)]
                 public int? Id { get; set; }
             }
 
             [Verb("list")]
-            internal class ListCommand
+            internal class ListCommand : Command
             {
 
             }

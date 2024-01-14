@@ -1,16 +1,40 @@
-﻿using VkStatusChanger.Worker.Contracts.Helpers;
+﻿using CommandLine;
+using VkStatusChanger.Worker.Contracts.Helpers;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
+using VkStatusChanger.Worker.Controllers.Common;
 using VkStatusChanger.Worker.Models.Commands;
 using VkStatusChanger.Worker.Models.Settings;
 
 namespace VkStatusChanger.Worker.Controllers
 {
-    internal class SettingsCommandController
+    internal class SettingsCommandController : BaseController
     {
         private readonly ISettingsHelper _settingsHelper;
 
-        public SettingsCommandController(ISettingsHelper settingsHelper)
+        public SettingsCommandController(ICustomParserResult parserResult, ISettingsHelper settingsHelper)
+            : base(parserResult)
         {
             _settingsHelper = settingsHelper;
+        }
+
+        public override async Task ExecuteCommand()
+        {
+            MapCommand<SettingsCommand.ResetCommand>(Reset);
+            await MapCommandAsync<SettingsCommand.TypeCommand.SetCommand>(TypeSet);
+            await MapCommandAsync<SettingsCommand.TypeCommand.ShowCommand>(TypeShow);
+
+            await MapCommandAsync<SettingsCommand.AuthCommand.SetCommand>(AuthSet);
+            await MapCommandAsync<SettingsCommand.AuthCommand.ShowCommand>(AuthShow);
+
+            await MapCommandAsync<SettingsCommand.EveryCommand.SetCommand>(EverySet);
+            await MapCommandAsync<SettingsCommand.EveryCommand.ShowCommand>(EveryShow);
+
+            await MapCommandAsync<SettingsCommand.ScheduleCommand.AddCommand>(ScheduleAdd);
+            await MapCommandAsync<SettingsCommand.ScheduleCommand.EditCommand>(ScheduleEdit);
+            await MapCommandAsync<SettingsCommand.ScheduleCommand.RemoveCommand>(ScheduleRemove);
+            await MapCommandAsync<SettingsCommand.ScheduleCommand.ListCommand>(ScheduleList);
+
+            Environment.Exit(0);
         }
 
         public async Task TypeSet(SettingsCommand.TypeCommand.SetCommand command)

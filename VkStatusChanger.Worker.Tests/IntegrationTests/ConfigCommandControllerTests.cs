@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using VkStatusChanger.Worker.Contracts.Helpers;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Helpers;
@@ -183,9 +184,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             settingsFileStub
                 .Setup(setup => setup.Value)
                 .Returns(new SettingsFile { Name = fileName });
-
             var settingsHelper = new SettingsHelper(settingsFileStub.Object);
-            var sut = new SettingsCommandController(settingsHelper);
+
+            var parserResultStub = new Mock<ICustomParserResult>();
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelper);
 
             return (settingsHelper, sut);
         }

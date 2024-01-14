@@ -3,9 +3,10 @@ using VkStatusChanger.Worker.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
-using VkStatusChanger.Worker.HostedServices;
 using System.Runtime.CompilerServices;
 using VkStatusChanger.Worker.Models.Commands;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
+using VkStatusChanger.Worker.Infrastructure;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
@@ -19,7 +20,6 @@ namespace VkStatusChanger
 
             builder.Services.AddConfiguration(builder.Configuration);
             builder.Services.AddVkHttpClient();
-            builder.Services.AddControllers();
             builder.Services.AddSerilog(cfg =>
             {
                 cfg.Enrich.FromLogContext()
@@ -27,12 +27,12 @@ namespace VkStatusChanger
             });
 
             var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);
-            builder.Services.AddSingleton(provider => parserResult);
+            builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult));
 
             parserResult.WithParsed<StartCommand>(command => builder.Services.AddJobScheduler());
 
             if(parserResult.TypeInfo.Current != typeof(StartCommand))
-                builder.Services.AddHostedService<CommandHostedService>();
+                builder.Services.AddControllers();
 
             var host = builder.Build();
             await host.RunAsync();

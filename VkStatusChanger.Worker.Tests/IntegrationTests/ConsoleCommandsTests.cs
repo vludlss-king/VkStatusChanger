@@ -12,19 +12,12 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         [Fact]
         public async Task Settings_type_set_command_shows_expected_output_to_console()
         {
-            // Arrange
             const string command = "settings type set --settings-type Every";
-
-            var sut = StartProcess(command);
-            await sut.WaitForExitAsync();
-            sut.Kill();
-
+            var sut = await StartProcess(command);
             RestoreSettings();
 
-            // Act
             var output = await sut!.StandardOutput.ReadLineAsync();
 
-            // Assert
             output.Should().Be("Тип настроек изменён.");
         }
 
@@ -33,16 +26,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string typeSetCommand = "settings type set --settings-type Schedule";
-
-            var sut = StartProcess(typeSetCommand);
-            await sut.WaitForExitAsync();
-            sut.Kill();
+            await StartProcess(typeSetCommand);
 
             const string typeShowCommand = "settings type show";
-            sut = StartProcess(typeShowCommand);
-            await sut.WaitForExitAsync();
-            sut.Kill();
-
+            var sut = await StartProcess(typeShowCommand);
             RestoreSettings();
 
             // Act
@@ -52,7 +39,20 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             output.Should().Be("Тип настроек: Schedule");
         }
 
-        private Process? StartProcess(string command)
+        [Fact]
+        public async Task Settings_auth_set_command_shows_expected_output_to_console()
+        {
+            const string command = "settings auth set --access-token NewAccessToken";
+            var sut = await StartProcess(command);
+            RestoreSettings();
+
+            var output = await sut!.StandardOutput.ReadLineAsync();
+
+            // Assert
+            output.Should().Be("Токен авторизации изменён.");
+        }
+
+        private async Task<Process?> StartProcess(string command)
         {
             if(!File.Exists(settingsBufferFile))
                 File.Copy(settingsFile, settingsBufferFile);
@@ -68,6 +68,8 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             processStartInfo.RedirectStandardOutput = true;
 
             var process = Process.Start(processStartInfo);
+            await process.WaitForExitAsync();
+            process.Kill();
 
             return process;
         }

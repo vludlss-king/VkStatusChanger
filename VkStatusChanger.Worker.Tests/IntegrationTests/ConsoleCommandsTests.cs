@@ -4,7 +4,6 @@ using VkStatusChanger.Worker.Tests.Attributes;
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
     [Collection(nameof(ConsoleCommandsTests))]
-    [CollectionDefinition(nameof(ConsoleCommandsTests), DisableParallelization = true)]
     public class ConsoleCommandsTests
     {
         const string settingsFile = "settings.json";
@@ -79,5 +78,11 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             File.Copy(settingsBufferFile, settingsFile);
             File.Delete(settingsBufferFile);
         }
+    }
+
+    [CollectionDefinition(nameof(ConsoleCommandsTests), DisableParallelization = true)]
+    public class ConsoleCommandsCollection
+    {
+
     }
 }

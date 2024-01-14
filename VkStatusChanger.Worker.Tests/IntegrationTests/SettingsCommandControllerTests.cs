@@ -9,9 +9,9 @@ using VkStatusChanger.Worker.Models.Commands;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
-    public class ConfigCommandControllerTests
+    public class SettingsCommandControllerTests
     {
-        public ConfigCommandControllerTests()
+        public SettingsCommandControllerTests()
         {
             
         }

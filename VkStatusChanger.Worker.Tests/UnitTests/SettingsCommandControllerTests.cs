@@ -1,4 +1,5 @@
-﻿using VkNet.Enums.Filters;
+﻿using Newtonsoft.Json.Linq;
+using VkNet.Enums.Filters;
 using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers;
@@ -54,13 +55,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         [Fact]
         public async Task Settings_auth_set_command_shows_expected_output()
         {
+            const string accessToken = "NewAccessToken";
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.ReadSettings())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
-                    AccessToken = "NewAccessToken"
+                    AccessToken = accessToken
                 }));
             var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
             SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand();
@@ -68,6 +70,26 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var output = await sut.AuthSet(command);
 
             output.Should().Be("Токен авторизации изменён.");
+        }
+
+        [Fact]
+        public async Task Settings_auth_show_command_shows_expected_output()
+        {
+            const string accessToken = "NewAccessToken";
+            var parserResultStub = new Mock<ICustomParserResult>();
+            var settingsHelperStub = new Mock<ISettingsHelper>();
+            settingsHelperStub
+                .Setup(setup => setup.ReadSettings())
+                .Returns(Task.FromResult(new SettingsModel()
+                {
+                    AccessToken = accessToken
+                }));
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            SettingsCommand.AuthCommand.ShowCommand command = new SettingsCommand.AuthCommand.ShowCommand();
+
+            var output = await sut.AuthShow(command);
+
+            output.Should().Be($"Токен авторизации: {accessToken}");
         }
     }
 }

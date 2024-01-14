@@ -50,5 +50,24 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
 
             output.Should().Be($"Тип настроек: {SettingsType.Schedule}");
         }
+
+        [Fact]
+        public async Task Settings_auth_set_command_shows_expected_output()
+        {
+            var parserResultStub = new Mock<ICustomParserResult>();
+            var settingsHelperStub = new Mock<ISettingsHelper>();
+            settingsHelperStub
+                .Setup(setup => setup.ReadSettings())
+                .Returns(Task.FromResult(new SettingsModel()
+                {
+                    AccessToken = "NewAccessToken"
+                }));
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand();
+
+            var output = await sut.AuthSet(command);
+
+            output.Should().Be("Токен авторизации изменён.");
+        }
     }
 }

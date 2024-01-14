@@ -91,5 +91,25 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
 
             output.Should().Be($"Токен авторизации: {accessToken}");
         }
+
+        [Fact]
+        public async Task Settings_reset_command_shows_expected_output()
+        {
+            const string accessToken = "NewAccessToken";
+            var parserResultStub = new Mock<ICustomParserResult>();
+            var settingsHelperStub = new Mock<ISettingsHelper>();
+            settingsHelperStub
+                .Setup(setup => setup.ReadSettings())
+                .Returns(Task.FromResult(new SettingsModel()
+                {
+                    AccessToken = accessToken
+                }));
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            SettingsCommand.ResetCommand command = new SettingsCommand.ResetCommand();
+
+            var output = sut.Reset(command);
+
+            output.Should().Be("Настройки сброшены.");
+        }
     }
 }

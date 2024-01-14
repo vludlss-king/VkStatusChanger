@@ -1,24 +1,62 @@
 ﻿using System.Diagnostics;
-using VkStatusChanger.Worker.Models.Commands.Common;
+using VkStatusChanger.Worker.Tests.Attributes;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
+    [Collection(nameof(ConsoleCommandsTests))]
+    [CollectionDefinition(nameof(ConsoleCommandsTests), DisableParallelization = true)]
     public class ConsoleCommandsTests
     {
+        const string settingsFile = "settings.json";
+        const string settingsBufferFile = $"settings_buffer.json";
+
         [Fact]
         public async Task Settings_type_set_command_shows_expected_output_to_console()
         {
+            // Arrange
             const string command = "settings type set --settings-type Every";
+
             var sut = StartProcess(command);
+            await sut.WaitForExitAsync();
+            sut.Kill();
 
-            var output = await sut.StandardOutput.ReadLineAsync();
+            RestoreSettings();
 
+            // Act
+            var output = await sut!.StandardOutput.ReadLineAsync();
+
+            // Assert
             output.Should().Be("Тип настроек изменён.");
         }
 
-        private Process StartProcess(string command)
+        [Fact]
+        public async Task Settings_type_show_command_shows_expected_output_to_console()
         {
-            File.Copy("settings.json", "settings_buffer.json");
+            // Arrange
+            const string typeSetCommand = "settings type set --settings-type Schedule";
+
+            var sut = StartProcess(typeSetCommand);
+            await sut.WaitForExitAsync();
+            sut.Kill();
+
+            const string typeShowCommand = "settings type show";
+            sut = StartProcess(typeShowCommand);
+            await sut.WaitForExitAsync();
+            sut.Kill();
+
+            RestoreSettings();
+
+            // Act
+            var output = await sut!.StandardOutput.ReadLineAsync();
+
+            // Assert
+            output.Should().Be("Тип настроек: Schedule");
+        }
+
+        private Process? StartProcess(string command)
+        {
+            if(!File.Exists(settingsBufferFile))
+                File.Copy(settingsFile, settingsBufferFile);
 
             var processStartInfo = new ProcessStartInfo();
             processStartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
@@ -32,11 +70,14 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
             var process = Process.Start(processStartInfo);
 
-            File.Delete("settings.json");
-            File.Copy("settings_buffer.json", "settings.json");
-            File.Delete("settings_buffer.json");
-
             return process;
+        }
+
+        private void RestoreSettings()
+        {
+            File.Delete(settingsFile);
+            File.Copy(settingsBufferFile, settingsFile);
+            File.Delete(settingsBufferFile);
         }
     }
 }

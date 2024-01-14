@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using System.Text;
 using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers.Common;
@@ -37,7 +38,7 @@ namespace VkStatusChanger.Worker.Controllers
             Environment.Exit(0);
         }
 
-        public async Task TypeSet(SettingsCommand.TypeCommand.SetCommand command)
+        public async Task<string> TypeSet(SettingsCommand.TypeCommand.SetCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -45,17 +46,19 @@ namespace VkStatusChanger.Worker.Controllers
 
             await _settingsHelper.WriteSettings(settings);
 
-            Console.WriteLine("Тип настроек изменён.");
+            var output = "Тип настроек изменён.";
+            return output;
         }
 
-        public async Task TypeShow(SettingsCommand.TypeCommand.ShowCommand command)
+        public async Task<string> TypeShow(SettingsCommand.TypeCommand.ShowCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            Console.WriteLine($"Тип настроек: {settings.SettingsType}");
+            var output = $"Тип настроек: {settings.SettingsType}";
+            return output;
         }
 
-        public async Task AuthSet(SettingsCommand.AuthCommand.SetCommand command)
+        public async Task<string> AuthSet(SettingsCommand.AuthCommand.SetCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -63,10 +66,11 @@ namespace VkStatusChanger.Worker.Controllers
 
             await _settingsHelper.WriteSettings(settings);
 
-            Console.WriteLine("Токен авторизации изменён.");
+            var output = "Токен авторизации изменён.";
+            return output;
         }
 
-        public async Task AuthShow(SettingsCommand.AuthCommand.ShowCommand command)
+        public async Task<string> AuthShow(SettingsCommand.AuthCommand.ShowCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -74,17 +78,19 @@ namespace VkStatusChanger.Worker.Controllers
                 ? "отсутствует"
                 : settings.AccessToken;
 
-            Console.WriteLine($"Токен авторизации: {token}");
+            var output = $"Токен авторизации: {token}";
+            return output;
         }
 
-        public void Reset(SettingsCommand.ResetCommand command)
+        public string Reset(SettingsCommand.ResetCommand command)
         {
             _settingsHelper.ResetSettings();
 
-            Console.WriteLine("Настройки сброшены.");
+            var output = "Настройки сброшены.";
+            return output;
         }
 
-        public async Task EverySet(SettingsCommand.EveryCommand.SetCommand command)
+        public async Task<string> EverySet(SettingsCommand.EveryCommand.SetCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -93,30 +99,34 @@ namespace VkStatusChanger.Worker.Controllers
 
             await _settingsHelper.WriteSettings(settings);
 
-            Console.WriteLine("Настройки Every изменены.");
+            var output = "Настройки Every изменены.";
+            return output;
         }
 
-        public async Task EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
+        public async Task<string> EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            Console.WriteLine($"Статусы меняются каждые {settings.Every.Seconds} секунд, список статусов:");
+            var outputBuilder = new StringBuilder();
+            outputBuilder.AppendLine($"Статусы меняются каждые {settings.Every.Seconds} секунд, список статусов:");
 
             if (!settings.Every.StatusesTexts!.Any())
             {
-                Console.WriteLine("отсутствуют");
+                outputBuilder.AppendLine("отсутствуют");
             }
             else
             {
-                for(int index = 0; index < settings.Every.StatusesTexts.Count; index++)
+                for(int index = 0; index < settings.Every.StatusesTexts!.Count; index++)
                 {
                     var statusText = settings.Every.StatusesTexts[index];
-                    Console.WriteLine($"{index + 1}. {statusText}");
+                    outputBuilder.AppendLine($"{index + 1}. {statusText}");
                 }
             }
+
+            return outputBuilder.ToString();
         }
 
-        public async Task ScheduleAdd(SettingsCommand.ScheduleCommand.AddCommand command)
+        public async Task<string> ScheduleAdd(SettingsCommand.ScheduleCommand.AddCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -130,10 +140,11 @@ namespace VkStatusChanger.Worker.Controllers
 
             await _settingsHelper.WriteSettings(settings);
 
-            Console.WriteLine("Расписание добавлено.");
+            var output = "Расписание добавлено.";
+            return output;
         }
 
-        public async Task ScheduleEdit(SettingsCommand.ScheduleCommand.EditCommand command)
+        public async Task<string> ScheduleEdit(SettingsCommand.ScheduleCommand.EditCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -145,10 +156,11 @@ namespace VkStatusChanger.Worker.Controllers
 
             await _settingsHelper.WriteSettings(settings);
 
-            Console.WriteLine("Расписание изменено.");
+            var output = "Расписание изменено.";
+            return output;
         }
 
-        public async Task ScheduleRemove(SettingsCommand.ScheduleCommand.RemoveCommand command)
+        public async Task<string> ScheduleRemove(SettingsCommand.ScheduleCommand.RemoveCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
@@ -159,24 +171,26 @@ namespace VkStatusChanger.Worker.Controllers
 
             await _settingsHelper.WriteSettings(settings);
 
-            Console.WriteLine("Расписание удалено.");
+            var output = "Расписание удалено.";
+            return output;
         }
 
-        public async Task ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
+        public async Task<string> ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            if (!settings.Schedule!.Items!.Any())
-            {
-                Console.Write("Расписания отсутствуют.");
-                return;
-            }
+            string? output = null;
 
-            for(int index = 0; index < settings.Schedule!.Items!.Count; index++)
-            {
-                var scheduleItem = settings.Schedule.Items[index];
-                Console.WriteLine($"{index + 1}. Статус: {scheduleItem.StatusText}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}");
-            }
+            if (!settings.Schedule!.Items!.Any())
+                output = "Расписания отсутствуют.";
+            else
+                for(int index = 0; index < settings.Schedule!.Items!.Count; index++)
+                {
+                    var scheduleItem = settings.Schedule.Items[index];
+                    output = $"{index + 1}. Статус: {scheduleItem.StatusText}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}";
+                }
+
+            return output;
         }
     }
 }

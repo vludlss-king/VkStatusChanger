@@ -12,18 +12,30 @@ namespace VkStatusChanger.Worker.Controllers.Common
 
         public BaseController(ICustomParserResult parserResult)
         {
-            _parserResult = parserResult;    
+            _parserResult = parserResult;
         }
 
         public abstract Task ExecuteCommand();
 
-        public void MapCommand<TCommand>(Action<TCommand> action)
+        public void MapCommand<TCommand>(Func<TCommand, string> func)
             where TCommand : Command
-            => _parserResult.WithParsed(action);
+            => _parserResult.WithParsed<TCommand>(command =>
+            {
+                var output = func(command);
+                Console.WriteLine(output);
+            });
 
-        public async Task MapCommandAsync<TCommand>(Func<TCommand, Task> action)
+        public async Task MapCommandAsync<TCommand>(Func<TCommand, Task<string>> func)
             where TCommand : Command
-            => await _parserResult.WithParsedAsync(action);
+        {
+            Func<TCommand, Task> funcWrapper = async command =>
+            {
+                var output = await func(command);
+                Console.WriteLine(output);
+            };
+
+            await _parserResult.WithParsedAsync(funcWrapper);
+        }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {

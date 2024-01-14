@@ -44,6 +44,8 @@ namespace VkStatusChanger.Worker.Controllers
             settings.SettingsType = command.SettingsType;
 
             await _settingsHelper.WriteSettings(settings);
+
+            Console.WriteLine("Тип настроек изменён.");
         }
 
         public async Task TypeShow(SettingsCommand.TypeCommand.ShowCommand command)
@@ -60,6 +62,8 @@ namespace VkStatusChanger.Worker.Controllers
             settings.AccessToken = command.AccessToken;
 
             await _settingsHelper.WriteSettings(settings);
+
+            Console.WriteLine("Токен авторизации изменён.");
         }
 
         public async Task AuthShow(SettingsCommand.AuthCommand.ShowCommand command)
@@ -88,13 +92,15 @@ namespace VkStatusChanger.Worker.Controllers
             settings.Every.Seconds = command.Seconds;
 
             await _settingsHelper.WriteSettings(settings);
+
+            Console.WriteLine("Настройки Every изменены.");
         }
 
         public async Task EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
 
-            Console.WriteLine($"Менять каждые {settings.Every.Seconds} секунд, Статусы:");
+            Console.WriteLine($"Статусы меняются каждые {settings.Every.Seconds} секунд, список статусов:");
 
             if (!settings.Every.StatusesTexts!.Any())
             {
@@ -123,6 +129,8 @@ namespace VkStatusChanger.Worker.Controllers
             settings.Schedule!.Items!.Add(scheduleItem);
 
             await _settingsHelper.WriteSettings(settings);
+
+            Console.WriteLine("Расписание добавлено.");
         }
 
         public async Task ScheduleEdit(SettingsCommand.ScheduleCommand.EditCommand command)
@@ -136,6 +144,8 @@ namespace VkStatusChanger.Worker.Controllers
             item.Time = command.Time;
 
             await _settingsHelper.WriteSettings(settings);
+
+            Console.WriteLine("Расписание изменено.");
         }
 
         public async Task ScheduleRemove(SettingsCommand.ScheduleCommand.RemoveCommand command)
@@ -148,12 +158,20 @@ namespace VkStatusChanger.Worker.Controllers
                 settings.Schedule!.Items!.RemoveAll(_ => true);
 
             await _settingsHelper.WriteSettings(settings);
+
+            Console.WriteLine("Расписание удалено.");
         }
 
         public async Task ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
         {
             var settings = await _settingsHelper.ReadSettings();
-            
+
+            if (!settings.Schedule!.Items!.Any())
+            {
+                Console.Write("Расписания отсутствуют.");
+                return;
+            }
+
             for(int index = 0; index < settings.Schedule!.Items!.Count; index++)
             {
                 var scheduleItem = settings.Schedule.Items[index];

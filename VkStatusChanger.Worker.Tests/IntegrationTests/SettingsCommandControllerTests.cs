@@ -54,7 +54,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            settings.SettingsType.Should().Be(command.SettingsType);
+            settings.Type.Should().Be(command.SettingsType);
             settings.Every!.StatusesTexts!.Count.Should().Be(0);
             settings.Every.Seconds.Should().Be(0);
             settings.Schedule!.Items!.Count.Should().Be(0);

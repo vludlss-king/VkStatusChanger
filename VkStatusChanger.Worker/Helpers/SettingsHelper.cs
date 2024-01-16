@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Models;
-using VkStatusChanger.Worker.Models.Settings;
+using VkStatusChanger.Worker.Models.UserSettings;
 
 namespace VkStatusChanger.Worker.Helpers
 {
@@ -18,15 +18,15 @@ namespace VkStatusChanger.Worker.Helpers
                 File.Create(_settingsFile.Name!).Dispose();
         }
 
-        public async Task Write(SettingsModel settings)
+        public async Task Write(Settings settings)
         {
             await File.WriteAllTextAsync(_settingsFile.Name!, JsonConvert.SerializeObject(settings));
         }
 
-        public async Task<SettingsModel> Read()
+        public async Task<Settings> Read()
         {
             string settingsJson = await File.ReadAllTextAsync(_settingsFile.Name!);
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
+            Settings settingsModel = JsonConvert.DeserializeObject<Settings>(settingsJson) ?? new Settings();
 
             return settingsModel;
         }

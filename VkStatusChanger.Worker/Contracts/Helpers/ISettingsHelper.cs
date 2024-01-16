@@ -1,4 +1,4 @@
-﻿using VkStatusChanger.Worker.Models.Settings;
+﻿using VkStatusChanger.Worker.Models.UserSettings;
 
 namespace VkStatusChanger.Worker.Contracts.Helpers
 {
@@ -7,11 +7,11 @@ namespace VkStatusChanger.Worker.Contracts.Helpers
         /// <summary>
         /// Записать настройки
         /// </summary>
-        Task Write(SettingsModel settings);
+        Task Write(Settings settings);
         /// <summary>
         /// Прочитать настройки
         /// </summary>
-        Task<SettingsModel> Read();
+        Task<Settings> Read();
         /// <summary>
         /// Сбросить настройки
         /// </summary>

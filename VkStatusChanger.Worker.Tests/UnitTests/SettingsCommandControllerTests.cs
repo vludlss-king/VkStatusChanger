@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using VkNet.Enums.Filters;
-using VkStatusChanger.Worker.Contracts.Helpers;
+﻿using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Models.Commands;
-using VkStatusChanger.Worker.Models.Settings;
+using VkStatusChanger.Worker.Models.UserSettings;
 
 namespace VkStatusChanger.Worker.Tests.UnitTests
 {
@@ -18,9 +16,9 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new SettingsModel()
+                .Returns(Task.FromResult(new Settings()
                 {
-                    SettingsType = SettingsType.Schedule
+                    Type = SettingsType.Schedule
                 }));
             var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
             SettingsCommand.TypeCommand.SetCommand command = new SettingsCommand.TypeCommand.SetCommand
@@ -40,9 +38,9 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new SettingsModel()
+                .Returns(Task.FromResult(new Settings()
                 {
-                    SettingsType = SettingsType.Schedule
+                    Type = SettingsType.Schedule
                 }));
             var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
             SettingsCommand.TypeCommand.ShowCommand command = new SettingsCommand.TypeCommand.ShowCommand();
@@ -60,7 +58,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new SettingsModel()
+                .Returns(Task.FromResult(new Settings()
                 {
                     AccessToken = accessToken
                 }));
@@ -80,7 +78,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new SettingsModel()
+                .Returns(Task.FromResult(new Settings()
                 {
                     AccessToken = accessToken
                 }));
@@ -100,7 +98,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new SettingsModel()
+                .Returns(Task.FromResult(new Settings()
                 {
                     AccessToken = accessToken
                 }));
@@ -119,9 +117,9 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new SettingsModel()
+                .Returns(Task.FromResult(new Settings()
                 {
-                    Every = new EveryModel
+                    Every = new Every
                     {
                         StatusesTexts = new List<string> { "Status1" },
                         Seconds = 30,

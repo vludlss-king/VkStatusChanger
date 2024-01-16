@@ -19,6 +19,6 @@ namespace VkStatusChanger.Worker.Models.UserSettings
         /// <summary>
         /// Тип настроек
         /// </summary>
-        public SettingsType SettingsType { get; set; }
+        public SettingsType Type { get; set; }
     }
 }

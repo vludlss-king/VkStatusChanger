@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using VkNet.Abstractions;
-using VkNet.Enums.Filters;
 using VkNet.Model;
 using VkNet;
 using VkStatusChanger.Worker.Jobs;
 using VkStatusChanger.Worker.Models;
-using VkStatusChanger.Worker.Models.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -64,7 +62,7 @@ namespace VkStatusChanger.Worker.Extensions
                 var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
 
                 const string jobDataKey = "statusText";
-                switch (settingsModel.SettingsType)
+                switch (settingsModel.Type)
                 {
                     case SettingsType.Every:
                         {

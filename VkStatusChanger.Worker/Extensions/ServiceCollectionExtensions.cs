@@ -53,7 +53,7 @@ namespace VkStatusChanger.Worker.Extensions
 
                 var provider = services.BuildServiceProvider();
                 var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
-                var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
+                var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
 
                 const string jobDataKey = "statusText";
                 switch (settingsModel.SettingsType)
@@ -123,7 +123,7 @@ namespace VkStatusChanger.Worker.Extensions
             services.AddSingleton(provider =>
             {
                 var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
-                var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
+                var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
                 return Options.Create(settingsModel);
             });
 
@@ -134,7 +134,7 @@ namespace VkStatusChanger.Worker.Extensions
                 var env = provider.GetRequiredService<IHostEnvironment>();
                 var configuration = provider.GetRequiredService<IConfiguration>();
                 var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
-                var settingsModel = settingsHelper.ReadSettings().GetAwaiter().GetResult();
+                var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
 
                 if (env.IsDevelopment())
                     return Options.Create(configuration.Get<Authorization>()!);

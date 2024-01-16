@@ -17,7 +17,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
-                .Setup(setup => setup.ReadSettings())
+                .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
                     SettingsType = SettingsType.Schedule
@@ -39,7 +39,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
-                .Setup(setup => setup.ReadSettings())
+                .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
                     SettingsType = SettingsType.Schedule
@@ -59,7 +59,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
-                .Setup(setup => setup.ReadSettings())
+                .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
                     AccessToken = accessToken
@@ -79,7 +79,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
-                .Setup(setup => setup.ReadSettings())
+                .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
                     AccessToken = accessToken
@@ -99,7 +99,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
-                .Setup(setup => setup.ReadSettings())
+                .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
                     AccessToken = accessToken
@@ -118,7 +118,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var parserResultStub = new Mock<ICustomParserResult>();
             var settingsHelperStub = new Mock<ISettingsHelper>();
             settingsHelperStub
-                .Setup(setup => setup.ReadSettings())
+                .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new SettingsModel()
                 {
                     Every = new EveryModel

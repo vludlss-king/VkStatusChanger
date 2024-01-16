@@ -18,12 +18,12 @@ namespace VkStatusChanger.Worker.Helpers
                 File.Create(_settingsFile.Name!).Dispose();
         }
 
-        public async Task WriteSettings(SettingsModel settings)
+        public async Task Write(SettingsModel settings)
         {
             await File.WriteAllTextAsync(_settingsFile.Name!, JsonConvert.SerializeObject(settings));
         }
 
-        public async Task<SettingsModel> ReadSettings()
+        public async Task<SettingsModel> Read()
         {
             string settingsJson = await File.ReadAllTextAsync(_settingsFile.Name!);
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settingsJson) ?? new SettingsModel();
@@ -31,7 +31,7 @@ namespace VkStatusChanger.Worker.Helpers
             return settingsModel;
         }
 
-        public void ResetSettings()
+        public void Reset()
         {
             if (File.Exists(_settingsFile.Name))
             {

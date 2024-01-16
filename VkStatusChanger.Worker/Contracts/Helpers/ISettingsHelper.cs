@@ -4,8 +4,17 @@ namespace VkStatusChanger.Worker.Contracts.Helpers
 {
     public interface ISettingsHelper
     {
-        Task WriteSettings(SettingsModel settings);
-        Task<SettingsModel> ReadSettings();
-        void ResetSettings();
+        /// <summary>
+        /// Записать настройки
+        /// </summary>
+        Task Write(SettingsModel settings);
+        /// <summary>
+        /// Прочитать настройки
+        /// </summary>
+        Task<SettingsModel> Read();
+        /// <summary>
+        /// Сбросить настройки
+        /// </summary>
+        void Reset();
     }
 }

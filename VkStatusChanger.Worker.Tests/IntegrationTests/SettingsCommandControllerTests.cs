@@ -28,7 +28,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
             await sut.AuthSet(command);
 
-            var settings = await settingsHelper.ReadSettings();
+            var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
@@ -50,7 +50,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
             await sut.TypeSet(command);
 
-            var settings = await settingsHelper.ReadSettings();
+            var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
@@ -73,7 +73,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
             await sut.EverySet(command);
 
-            var settings = await settingsHelper.ReadSettings();
+            var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
@@ -96,7 +96,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
             await sut.ScheduleAdd(command);
 
-            var settings = await settingsHelper.ReadSettings();
+            var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
@@ -133,7 +133,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             // Act
             await sut.ScheduleEdit(editCommand);
 
-            var settings = await settingsHelper.ReadSettings();
+            var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
@@ -168,7 +168,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             // Act
             await sut.ScheduleRemove(removeCommand);
 
-            var settings = await settingsHelper.ReadSettings();
+            var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
                 File.Delete(fileName);
 

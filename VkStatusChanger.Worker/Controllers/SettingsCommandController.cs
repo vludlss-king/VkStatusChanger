@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers.Common;
 using VkStatusChanger.Worker.Models.Commands;
@@ -9,12 +8,12 @@ namespace VkStatusChanger.Worker.Controllers
 {
     internal class SettingsCommandController : BaseController
     {
-        private readonly ISettingsHelper _settings;
+        private readonly ISettingsManager _settingsManager;
 
-        public SettingsCommandController(ICustomParserResult parserResult, ISettingsHelper settingsHelper)
+        public SettingsCommandController(ICustomParserResult parserResult, ISettingsManager settingsManager)
             : base(parserResult)
         {
-            _settings = settingsHelper;
+            _settingsManager = settingsManager;
         }
 
         public override async Task ExecuteCommand()
@@ -39,11 +38,11 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> TypeSet(SettingsCommand.TypeCommand.SetCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             settings.Type = command.SettingsType;
 
-            await _settings.Write(settings);
+            await _settingsManager.Write(settings);
 
             var output = "Тип настроек изменён.";
             return output;
@@ -51,7 +50,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> TypeShow(SettingsCommand.TypeCommand.ShowCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             var output = $"Тип настроек: {settings.Type}";
             return output;
@@ -59,11 +58,11 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> AuthSet(SettingsCommand.AuthCommand.SetCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             settings.AccessToken = command.AccessToken;
 
-            await _settings.Write(settings);
+            await _settingsManager.Write(settings);
 
             var output = "Токен авторизации изменён.";
             return output;
@@ -71,7 +70,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> AuthShow(SettingsCommand.AuthCommand.ShowCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             var token = string.IsNullOrWhiteSpace(settings.AccessToken)
                 ? "отсутствует"
@@ -83,7 +82,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public string Reset(SettingsCommand.ResetCommand command)
         {
-            _settings.Reset();
+            _settingsManager.Reset();
 
             var output = "Настройки сброшены.";
             return output;
@@ -91,12 +90,12 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> EverySet(SettingsCommand.EveryCommand.SetCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             settings.Every.StatusesTexts = command.StatusesTexts.ToList();
             settings.Every.Seconds = command.Seconds;
 
-            await _settings.Write(settings);
+            await _settingsManager.Write(settings);
 
             var output = "Настройки Every изменены.";
             return output;
@@ -104,7 +103,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> EveryShow(SettingsCommand.EveryCommand.ShowCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             var outputBuilder = new StringBuilder();
             outputBuilder.AppendLine($"Статусы меняются каждые {settings.Every.Seconds} секунд, список статусов:");
@@ -127,7 +126,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> ScheduleAdd(SettingsCommand.ScheduleCommand.AddCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             var scheduleItem = new ScheduleItem
             {
@@ -137,7 +136,7 @@ namespace VkStatusChanger.Worker.Controllers
             };
             settings.Schedule.Items.Add(scheduleItem);
 
-            await _settings.Write(settings);
+            await _settingsManager.Write(settings);
 
             var output = "Расписание добавлено.";
             return output;
@@ -145,7 +144,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> ScheduleEdit(SettingsCommand.ScheduleCommand.EditCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             var item = settings.Schedule.Items[command.Id - 1];
 
@@ -153,7 +152,7 @@ namespace VkStatusChanger.Worker.Controllers
             item.Date = command.Date;
             item.Time = command.Time;
 
-            await _settings.Write(settings);
+            await _settingsManager.Write(settings);
 
             var output = "Расписание изменено.";
             return output;
@@ -161,14 +160,14 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> ScheduleRemove(SettingsCommand.ScheduleCommand.RemoveCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             if (command.Id.HasValue)
                 settings.Schedule.Items.RemoveAt(command.Id.Value - 1);
             else
                 settings.Schedule.Items.RemoveAll(_ => true);
 
-            await _settings.Write(settings);
+            await _settingsManager.Write(settings);
 
             var output = "Расписание удалено.";
             return output;
@@ -176,7 +175,7 @@ namespace VkStatusChanger.Worker.Controllers
 
         public async Task<string> ScheduleList(SettingsCommand.ScheduleCommand.ListCommand command)
         {
-            var settings = await _settings.Read();
+            var settings = await _settingsManager.Read();
 
             string output = "";
             if (!settings.Schedule.Items.Any())

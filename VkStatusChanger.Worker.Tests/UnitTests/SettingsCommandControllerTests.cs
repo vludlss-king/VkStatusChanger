@@ -1,5 +1,4 @@
-﻿using VkStatusChanger.Worker.Contracts.Helpers;
-using VkStatusChanger.Worker.Contracts.Infrastructure;
+﻿using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Models.Commands;
@@ -13,14 +12,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         public async Task Settings_type_set_command_shows_expected_output()
         {
             var parserResultStub = new Mock<ICustomParserResult>();
-            var settingsHelperStub = new Mock<ISettingsHelper>();
-            settingsHelperStub
+            var settingsManagerStub = new Mock<ISettingsManager>();
+            settingsManagerStub
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new Settings()
                 {
                     Type = SettingsType.Schedule
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.TypeCommand.SetCommand command = new SettingsCommand.TypeCommand.SetCommand
             {
                 SettingsType = SettingsType.Schedule
@@ -35,14 +34,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         public async Task Settings_type_show_command_shows_expected_output()
         {
             var parserResultStub = new Mock<ICustomParserResult>();
-            var settingsHelperStub = new Mock<ISettingsHelper>();
-            settingsHelperStub
+            var settingsManagerStub = new Mock<ISettingsManager>();
+            settingsManagerStub
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new Settings()
                 {
                     Type = SettingsType.Schedule
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.TypeCommand.ShowCommand command = new SettingsCommand.TypeCommand.ShowCommand();
 
             var output = await sut.TypeShow(command);
@@ -55,14 +54,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         {
             const string accessToken = "NewAccessToken";
             var parserResultStub = new Mock<ICustomParserResult>();
-            var settingsHelperStub = new Mock<ISettingsHelper>();
-            settingsHelperStub
+            var settingsManagerStub = new Mock<ISettingsManager>();
+            settingsManagerStub
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new Settings()
                 {
                     AccessToken = accessToken
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand();
 
             var output = await sut.AuthSet(command);
@@ -75,14 +74,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         {
             const string accessToken = "NewAccessToken";
             var parserResultStub = new Mock<ICustomParserResult>();
-            var settingsHelperStub = new Mock<ISettingsHelper>();
-            settingsHelperStub
+            var settingsManagerStub = new Mock<ISettingsManager>();
+            settingsManagerStub
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new Settings()
                 {
                     AccessToken = accessToken
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.AuthCommand.ShowCommand command = new SettingsCommand.AuthCommand.ShowCommand();
 
             var output = await sut.AuthShow(command);
@@ -95,14 +94,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         {
             const string accessToken = "NewAccessToken";
             var parserResultStub = new Mock<ICustomParserResult>();
-            var settingsHelperStub = new Mock<ISettingsHelper>();
-            settingsHelperStub
+            var settingsManagerStub = new Mock<ISettingsManager>();
+            settingsManagerStub
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new Settings()
                 {
                     AccessToken = accessToken
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.ResetCommand command = new SettingsCommand.ResetCommand();
 
             var output = sut.Reset(command);
@@ -114,8 +113,8 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
         public async Task Settings_every_set_command_shows_expected_output()
         {
             var parserResultStub = new Mock<ICustomParserResult>();
-            var settingsHelperStub = new Mock<ISettingsHelper>();
-            settingsHelperStub
+            var settingsManagerStub = new Mock<ISettingsManager>();
+            settingsManagerStub
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new Settings()
                 {
@@ -125,7 +124,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                         Seconds = 30,
                     }
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelperStub.Object);
+            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.EveryCommand.SetCommand command = new SettingsCommand.EveryCommand.SetCommand()
             {
                 StatusesTexts = new List<string> { "Status1" },

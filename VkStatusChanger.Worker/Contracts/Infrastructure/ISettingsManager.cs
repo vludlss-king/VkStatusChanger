@@ -1,8 +1,8 @@
 ﻿using VkStatusChanger.Worker.Models.UserSettings;
 
-namespace VkStatusChanger.Worker.Contracts.Helpers
+namespace VkStatusChanger.Worker.Contracts.Infrastructure
 {
-    public interface ISettingsHelper
+    public interface ISettingsManager
     {
         /// <summary>
         /// Записать настройки

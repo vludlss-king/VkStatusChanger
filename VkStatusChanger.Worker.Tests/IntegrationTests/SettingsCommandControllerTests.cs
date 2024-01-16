@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
-using VkStatusChanger.Worker.Contracts.Helpers;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Enums;
-using VkStatusChanger.Worker.Helpers;
+using VkStatusChanger.Worker.Infrastructure;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.Commands;
 
@@ -178,13 +177,13 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             settings.Every.Seconds.Should().Be(0);
         }
 
-        private (ISettingsHelper settingsHelper, SettingsCommandController sut) Startup(string fileName)
+        private (ISettingsManager settingsManager, SettingsCommandController sut) Startup(string fileName)
         {
             var settingsFileStub = new Mock<IOptions<SettingsFile>>();
             settingsFileStub
                 .Setup(setup => setup.Value)
                 .Returns(new SettingsFile { Name = fileName });
-            var settingsHelper = new SettingsHelper(settingsFileStub.Object);
+            var settingsHelper = new SettingsManager(settingsFileStub.Object);
 
             var parserResultStub = new Mock<ICustomParserResult>();
             var sut = new SettingsCommandController(parserResultStub.Object, settingsHelper);

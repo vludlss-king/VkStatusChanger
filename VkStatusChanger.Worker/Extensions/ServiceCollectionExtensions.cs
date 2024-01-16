@@ -11,9 +11,8 @@ using Microsoft.Extensions.Hosting;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure.HttpClients;
 using VkStatusChanger.Worker.Enums;
-using VkStatusChanger.Worker.Contracts.Helpers;
-using VkStatusChanger.Worker.Helpers;
 using VkStatusChanger.Worker.Controllers;
+using VkStatusChanger.Worker.Infrastructure;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -58,8 +57,8 @@ namespace VkStatusChanger.Worker.Extensions
                 quartzCfg.UseDefaultThreadPool(1);
 
                 var provider = services.BuildServiceProvider();
-                var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
-                var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
+                var settingsManager = provider.GetRequiredService<ISettingsManager>();
+                var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
 
                 const string jobDataKey = "statusText";
                 switch (settingsModel.Type)
@@ -124,12 +123,12 @@ namespace VkStatusChanger.Worker.Extensions
         public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddSingleton(provider => Options.Create(new SettingsFile { Name = "settings.json" }));
-            services.AddSingleton<ISettingsHelper, SettingsHelper>();
+            services.AddSingleton<ISettingsManager, SettingsManager>();
 
             services.AddSingleton(provider =>
             {
-                var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
-                var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
+                var settingsManager = provider.GetRequiredService<ISettingsManager>();
+                var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
                 return Options.Create(settingsModel);
             });
 
@@ -139,8 +138,8 @@ namespace VkStatusChanger.Worker.Extensions
             {
                 var env = provider.GetRequiredService<IHostEnvironment>();
                 var configuration = provider.GetRequiredService<IConfiguration>();
-                var settingsHelper = provider.GetRequiredService<ISettingsHelper>();
-                var settingsModel = settingsHelper.Read().GetAwaiter().GetResult();
+                var settingsManager = provider.GetRequiredService<ISettingsManager>();
+                var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
 
                 if (env.IsDevelopment())
                     return Options.Create(configuration.Get<Authorization>()!);

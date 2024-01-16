@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using VkStatusChanger.Worker.Contracts.Helpers;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Models;
 using VkStatusChanger.Worker.Models.UserSettings;
 
-namespace VkStatusChanger.Worker.Helpers
+namespace VkStatusChanger.Worker.Infrastructure
 {
-    internal class SettingsHelper : ISettingsHelper
+    internal class SettingsManager : ISettingsManager
     {
         private readonly SettingsFile _settingsFile;
 
-        public SettingsHelper(IOptions<SettingsFile> settingsFile)
+        public SettingsManager(IOptions<SettingsFile> settingsFile)
         {
             _settingsFile = settingsFile.Value;
 

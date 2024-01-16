@@ -94,7 +94,7 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsHelper.Read();
 
-            settings.Every!.StatusesTexts = command.StatusesTexts.ToList();
+            settings.Every.StatusesTexts = command.StatusesTexts.ToList();
             settings.Every.Seconds = command.Seconds;
 
             await _settingsHelper.Write(settings);
@@ -110,13 +110,13 @@ namespace VkStatusChanger.Worker.Controllers
             var outputBuilder = new StringBuilder();
             outputBuilder.AppendLine($"Статусы меняются каждые {settings.Every.Seconds} секунд, список статусов:");
 
-            if (!settings.Every.StatusesTexts!.Any())
+            if (!settings.Every.StatusesTexts.Any())
             {
                 outputBuilder.AppendLine("отсутствуют");
             }
             else
             {
-                for(int index = 0; index < settings.Every.StatusesTexts!.Count; index++)
+                for(int index = 0; index < settings.Every.StatusesTexts.Count; index++)
                 {
                     var statusText = settings.Every.StatusesTexts[index];
                     outputBuilder.AppendLine($"{index + 1}. {statusText}");
@@ -136,7 +136,7 @@ namespace VkStatusChanger.Worker.Controllers
                 Date = command.Date,
                 Time = command.Time,
             };
-            settings.Schedule!.Items!.Add(scheduleItem);
+            settings.Schedule.Items.Add(scheduleItem);
 
             await _settingsHelper.Write(settings);
 
@@ -165,9 +165,9 @@ namespace VkStatusChanger.Worker.Controllers
             var settings = await _settingsHelper.Read();
 
             if (command.Id.HasValue)
-                settings.Schedule!.Items!.RemoveAt(command.Id.Value - 1);
+                settings.Schedule.Items.RemoveAt(command.Id.Value - 1);
             else
-                settings.Schedule!.Items!.RemoveAll(_ => true);
+                settings.Schedule.Items.RemoveAll(_ => true);
 
             await _settingsHelper.Write(settings);
 
@@ -179,12 +179,11 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsHelper.Read();
 
-            string? output = null;
-
-            if (!settings.Schedule!.Items!.Any())
+            string output = "";
+            if (!settings.Schedule.Items.Any())
                 output = "Расписания отсутствуют.";
             else
-                for(int index = 0; index < settings.Schedule!.Items!.Count; index++)
+                for(int index = 0; index < settings.Schedule.Items.Count; index++)
                 {
                     var scheduleItem = settings.Schedule.Items[index];
                     output = $"{index + 1}. Статус: {scheduleItem.StatusText}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}";

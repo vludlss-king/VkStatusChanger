@@ -1,6 +1,6 @@
-﻿namespace VkStatusChanger.Worker.Models.Settings
+﻿namespace VkStatusChanger.Worker.Models.UserSettings
 {
-    public class EveryModel
+    public class Every
     {
         /// <summary>
         /// Тексты статусов

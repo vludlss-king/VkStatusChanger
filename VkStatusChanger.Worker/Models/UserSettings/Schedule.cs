@@ -1,6 +1,6 @@
-﻿namespace VkStatusChanger.Worker.Models.Settings
+﻿namespace VkStatusChanger.Worker.Models.UserSettings
 {
-    public class ScheduleModel
+    public class Schedule
     {
         /// <summary>
         /// Расписания смены статусов

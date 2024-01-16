@@ -1,4 +1,4 @@
-﻿namespace VkStatusChanger.Worker.Models.Settings
+﻿namespace VkStatusChanger.Worker.Models.UserSettings
 {
     public class ScheduleItem
     {

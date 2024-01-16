@@ -1,8 +1,8 @@
 ﻿using VkStatusChanger.Worker.Enums;
 
-namespace VkStatusChanger.Worker.Models.Settings
+namespace VkStatusChanger.Worker.Models.UserSettings
 {
-    public class SettingsModel
+    public class Settings
     {
         /// <summary>
         /// Токен для входа в клиент VK API
@@ -11,11 +11,11 @@ namespace VkStatusChanger.Worker.Models.Settings
         /// <summary>
         /// Один из типов настроек
         /// </summary>
-        public EveryModel Every { get; set; } = new();
+        public Every Every { get; set; } = new();
         /// <summary>
         /// Один из типов настроек
         /// </summary>
-        public ScheduleModel Schedule { get; set; } = new();
+        public Schedule Schedule { get; set; } = new();
         /// <summary>
         /// Тип настроек
         /// </summary>

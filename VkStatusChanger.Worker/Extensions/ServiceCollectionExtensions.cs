@@ -21,7 +21,15 @@ namespace VkStatusChanger.Worker.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddVkHttpClient(this IServiceCollection services)
+        public static IServiceCollection AddHttpClients(this IServiceCollection services)
+        {
+            services.AddVkApi();
+            services.AddScoped<IVkStatusHttpClient, VkStatusHttpClient>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddVkApi(this IServiceCollection services)
         {
             services.AddScoped<IVkApi>(provider =>
             {
@@ -33,7 +41,7 @@ namespace VkStatusChanger.Worker.Extensions
                 {
                     AccessToken = inputArgs.AccessToken
                 };
-                
+
                 vkApi.Authorize(authParams);
 
                 return vkApi;

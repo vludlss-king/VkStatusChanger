@@ -19,7 +19,7 @@ namespace VkStatusChanger
             var builder = Host.CreateApplicationBuilder(args);
 
             builder.Services.AddConfiguration(builder.Configuration);
-            builder.Services.AddVkHttpClient();
+            builder.Services.AddHttpClients();
             builder.Services.AddSerilog(cfg =>
             {
                 cfg.Enrich.FromLogContext()

@@ -5,6 +5,6 @@
         /// <summary>
         /// Название файла вместе с расширением
         /// </summary>
-        public string? Name { get; set; }
+        public required string Name { get; init; }
     }
 }

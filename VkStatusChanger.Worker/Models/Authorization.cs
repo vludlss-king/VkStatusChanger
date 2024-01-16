@@ -8,6 +8,6 @@ namespace VkStatusChanger.Worker.Models
         /// Токен для входа в клиент VK API
         /// </summary>
         [Option("access-token", Required = false)]
-        public required string? AccessToken { get; set; }
+        public string? AccessToken { get; set; }
     }
 }

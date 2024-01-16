@@ -11,11 +11,11 @@ namespace VkStatusChanger.Worker.Models.Settings
         /// <summary>
         /// Один из типов настроек
         /// </summary>
-        public EveryModel? Every { get; set; } = new();
+        public EveryModel Every { get; set; } = new();
         /// <summary>
         /// Один из типов настроек
         /// </summary>
-        public ScheduleModel? Schedule { get; set; } = new();
+        public ScheduleModel Schedule { get; set; } = new();
         /// <summary>
         /// Тип настроек
         /// </summary>

@@ -68,8 +68,8 @@ namespace VkStatusChanger.Worker.Extensions
                 {
                     case SettingsType.Every:
                         {
-                            var everyStatusJobKey = new JobKey(nameof(EveryStatusJob));
-                            quartzCfg.AddJob<EveryStatusJob>(everyStatusJobKey);
+                            var everyStatusJobKey = new JobKey(nameof(EveryJob));
+                            quartzCfg.AddJob<EveryJob>(everyStatusJobKey);
 
                             quartzCfg.AddTrigger(triggerCfg =>
                             {
@@ -89,8 +89,8 @@ namespace VkStatusChanger.Worker.Extensions
                         }
                     case SettingsType.Schedule:
                         {
-                            var scheduleStatusJobKey = new JobKey(nameof(ScheduleStatusJob));
-                            quartzCfg.AddJob<ScheduleStatusJob>(scheduleStatusJobKey);
+                            var scheduleStatusJobKey = new JobKey(nameof(ScheduleJob));
+                            quartzCfg.AddJob<ScheduleJob>(scheduleStatusJobKey);
 
                             var dateTimeNow = DateTime.Now;
                             var scheduleItems = settingsModel.Schedule.Items.Select(item => new

@@ -4,12 +4,12 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 
 namespace VkStatusChanger.Worker.Jobs
 {
-    internal class ScheduleStatusJob : IJob
+    internal class ScheduleJob : IJob
     {
         private readonly IVkStatusHttpClient _vkHttpClient;
-        private readonly ILogger<ScheduleStatusJob> _logger;
+        private readonly ILogger<ScheduleJob> _logger;
 
-        public ScheduleStatusJob(IVkStatusHttpClient vkHttpClient, ILogger<ScheduleStatusJob> logger)
+        public ScheduleJob(IVkStatusHttpClient vkHttpClient, ILogger<ScheduleJob> logger)
         {
             _vkHttpClient = vkHttpClient;
             _logger = logger;

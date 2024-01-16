@@ -4,14 +4,14 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 
 namespace VkStatusChanger.Worker.Jobs
 {
-    internal class EveryStatusJob : IJob
+    internal class EveryJob : IJob
     {
         private readonly IVkStatusHttpClient _vkHttpClient;
-        private readonly ILogger<EveryStatusJob> _logger;
+        private readonly ILogger<EveryJob> _logger;
 
         private static int _refireCount = 0;
 
-        public EveryStatusJob(IVkStatusHttpClient vkHttpClient, ILogger<EveryStatusJob> logger)
+        public EveryJob(IVkStatusHttpClient vkHttpClient, ILogger<EveryJob> logger)
         {
             _vkHttpClient = vkHttpClient;
             _logger = logger;

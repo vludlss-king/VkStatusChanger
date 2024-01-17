@@ -13,6 +13,7 @@ using VkStatusChanger.Worker.Infrastructure.HttpClients;
 using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -58,6 +59,8 @@ namespace VkStatusChanger.Worker.Extensions
 
                 var provider = services.BuildServiceProvider();
                 var settingsManager = provider.GetRequiredService<ISettingsManager>();
+                var logger = provider.GetRequiredService<ILogger<Program>>();
+
                 var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
 
                 const string jobDataKey = "statusText";
@@ -81,6 +84,8 @@ namespace VkStatusChanger.Worker.Extensions
                                 var jobData = new JobDataMap((IDictionary<string, object>)dict);
                                 triggerCfg.UsingJobData(jobData);
                             });
+
+                            logger.LogInformation("Выбран тип настроек Every");
 
                             break;
                         }
@@ -106,6 +111,8 @@ namespace VkStatusChanger.Worker.Extensions
                                     triggerCfg.UsingJobData(jobDataKey, scheduleItem.StatusText!);
                                 });
                             }
+
+                            logger.LogInformation("Выбран тип настроек Schedule");
 
                             break;
                         }

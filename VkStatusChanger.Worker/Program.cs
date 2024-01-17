@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 using VkStatusChanger.Worker.Models.Commands;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure;
+using CommandLine.Text;
+using Microsoft.Extensions.Logging;
+using Serilog.Events;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
@@ -28,10 +31,20 @@ namespace VkStatusChanger
 
             builder.Services.AddConfiguration(builder.Configuration);
             builder.Services.AddHttpClients();
-            builder.Services.AddSerilog(cfg =>
+            builder.Services.AddSerilog((provider, cfg) =>
             {
+                var env = provider.GetRequiredService<IHostEnvironment>();
+
                 cfg.Enrich.FromLogContext()
                     .WriteTo.Console();
+
+                if (env.IsProduction())
+                {
+                    cfg.MinimumLevel.Override("Microsoft", LogEventLevel.Fatal);
+                    cfg.MinimumLevel.Override("Quartz", LogEventLevel.Fatal);
+                }
+                else
+                    cfg.MinimumLevel.Information();
             });
 
             var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);

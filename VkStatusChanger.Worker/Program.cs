@@ -16,6 +16,14 @@ namespace VkStatusChanger
     {
         static async Task Main(string[] args)
         {
+            if(!args.Any())
+            {
+                Console.WriteLine("С приложением можно работать только через командную строчку, пожалуйста, прочитай документацию.");
+                Console.WriteLine("https://github.com/vludlss-king/VkStatusChanger/blob/main/README.md");
+                Console.ReadKey();
+                return;
+            }
+
             var builder = Host.CreateApplicationBuilder(args);
 
             builder.Services.AddConfiguration(builder.Configuration);

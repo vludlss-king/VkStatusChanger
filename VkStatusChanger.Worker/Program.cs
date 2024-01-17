@@ -31,21 +31,7 @@ namespace VkStatusChanger
 
             builder.Services.AddConfiguration(builder.Configuration);
             builder.Services.AddHttpClients();
-            builder.Services.AddSerilog((provider, cfg) =>
-            {
-                var env = provider.GetRequiredService<IHostEnvironment>();
-
-                cfg.Enrich.FromLogContext()
-                    .WriteTo.Console();
-
-                if (env.IsProduction())
-                {
-                    cfg.MinimumLevel.Override("Microsoft", LogEventLevel.Fatal);
-                    cfg.MinimumLevel.Override("Quartz", LogEventLevel.Fatal);
-                }
-                else
-                    cfg.MinimumLevel.Information();
-            });
+            builder.Services.AddSerilog();
 
             var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);
             builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult));

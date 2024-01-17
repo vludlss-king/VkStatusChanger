@@ -14,6 +14,8 @@ using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Infrastructure;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace VkStatusChanger.Worker.Extensions
 {
@@ -160,6 +162,27 @@ namespace VkStatusChanger.Worker.Extensions
         public static IServiceCollection AddControllers(this IServiceCollection services)
         {
             services.AddHostedService<SettingsCommandController>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddSerilog(this IServiceCollection services)
+        {
+            services.AddSerilog((provider, cfg) =>
+            {
+                var env = provider.GetRequiredService<IHostEnvironment>();
+
+                cfg.Enrich.FromLogContext()
+                    .WriteTo.Console();
+
+                if (env.IsProduction())
+                {
+                    cfg.MinimumLevel.Override("Microsoft", LogEventLevel.Fatal);
+                    cfg.MinimumLevel.Override("Quartz", LogEventLevel.Fatal);
+                }
+                else
+                    cfg.MinimumLevel.Information();
+            });
 
             return services;
         }

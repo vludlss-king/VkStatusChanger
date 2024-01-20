@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
 	<PublishSingleFile>true</PublishSingleFile>
 	<SelfContained>true</SelfContained>
-	<AssemblyName>Менеджер статусов ВК</AssemblyName>
+	<AssemblyName>Менеджер твоего статуса ВКонтакте</AssemblyName>
 	<ApplicationIcon>app_icon.ico</ApplicationIcon>
   </PropertyGroup>
 

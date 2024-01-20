@@ -3,7 +3,7 @@ using VkStatusChanger.Worker.Models.Commands.Common;
 
 namespace VkStatusChanger.Worker.Models.Commands
 {
-    [Verb("start")]
+    [Verb("start", HelpText = "Запустить смену статусов по указанным настройкам.")]
     internal class StartCommand : Command
     {
     }

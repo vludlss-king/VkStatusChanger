@@ -5,57 +5,57 @@ using VkStatusChanger.Worker.Models.Commands.Common;
 
 namespace VkStatusChanger.Worker.Models.Commands
 {
-    [Verb("settings")]
+    [Verb("settings", HelpText = "Настройки.")]
     [ChildVerbs(typeof(ResetCommand), typeof(TypeCommand), typeof(AuthCommand), typeof(EveryCommand), typeof(ScheduleCommand))]
     internal class SettingsCommand : Command
     {
-        [Verb("reset")]
+        [Verb("reset", HelpText = "Сбросить настройки.")]
         internal class ResetCommand : Command
         {
 
         }
 
-        [Verb("type")]
+        [Verb("type", HelpText = "Тип настроек.")]
         [ChildVerbs(typeof(SetCommand), typeof(ShowCommand))]
         internal class TypeCommand : Command
         {
-            [Verb("set")]
+            [Verb("set", HelpText = "Установить тип настроек.")]
             internal class SetCommand : Command
             {
                 [Option("settings-type", Required = true, Default = SettingsType.Every)]
                 public SettingsType SettingsType { get; set; }
             }
 
-            [Verb("show")]
+            [Verb("show", HelpText = "Показать текущий тип настроек.")]
             internal class ShowCommand : Command
             {
 
             }
         }
 
-        [Verb("auth")]
+        [Verb("auth", HelpText = "Авторизация.")]
         [ChildVerbs(typeof(SetCommand), typeof(ShowCommand))]
         internal class AuthCommand : Command
         {
-            [Verb("set")]
+            [Verb("set", HelpText = "Авторизоваться.")]
             internal class SetCommand : Command
             {
-                [Option("access-token", Required = true)]
+                [Option("access-token", Required = true, HelpText = "Токен доступа Standalone-прлиожения.")]
                 public string? AccessToken { get; set; }
             }
 
-            [Verb("show")]
+            [Verb("show", HelpText = "Показать текущую авторизацию.")]
             internal class ShowCommand : Command
             {
 
             }
         }
 
-        [Verb("every")]
+        [Verb("every", HelpText = "Тип настроек Every (менять статусы по очереди каждые N секунд).")]
         [ChildVerbs(typeof(ShowCommand), typeof(SetCommand))]
         internal class EveryCommand : Command
         {
-            [Verb("set")]
+            [Verb("set", HelpText = "Установить статусы.")]
             internal class SetCommand : Command
             {
                 [Option("statuses-texts", Required = true, Separator = ',')]
@@ -64,18 +64,18 @@ namespace VkStatusChanger.Worker.Models.Commands
                 public int Seconds { get; set; }
             }
 
-            [Verb("show")]
+            [Verb("show", HelpText = "Показать текущие статусы.")]
             internal class ShowCommand : Command
             {
 
             }
         }
 
-        [Verb("schedule")]
+        [Verb("schedule", HelpText = "Тип настроек Schedule (менять статусы по датам и времени).")]
         [ChildVerbs(typeof(AddCommand), typeof(EditCommand), typeof(RemoveCommand), typeof(ListCommand))]
         internal class ScheduleCommand : Command
         {
-            [Verb("add")]
+            [Verb("add", HelpText = "Добавить статус.")]
             internal class AddCommand : Command
             {
                 [Option("status-text", Required = true)]
@@ -86,7 +86,7 @@ namespace VkStatusChanger.Worker.Models.Commands
                 public TimeSpan Time { get; set; }
             }
 
-            [Verb("edit")]
+            [Verb("edit", HelpText = "Редактировать статус.")]
             internal class EditCommand : Command
             {
                 [Option("id", Required = true)]
@@ -99,14 +99,14 @@ namespace VkStatusChanger.Worker.Models.Commands
                 public TimeSpan Time { get; set; }
             }
 
-            [Verb("remove")]
+            [Verb("remove", HelpText = "Удалить статус.")]
             internal class RemoveCommand : Command
             {
                 [Option("id", Required = false)]
                 public int? Id { get; set; }
             }
 
-            [Verb("list")]
+            [Verb("list", HelpText = "Показать список текущих статусов.")]
             internal class ListCommand : Command
             {
 

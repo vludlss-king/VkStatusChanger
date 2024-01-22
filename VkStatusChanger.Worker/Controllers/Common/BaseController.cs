@@ -16,7 +16,7 @@ namespace VkStatusChanger.Worker.Controllers.Common
         public abstract Task ExecuteCommand();
 
         public void MapCommand<TCommand>(Func<TCommand, string> func)
-            where TCommand : Command
+            where TCommand : BaseCommand
             => _parserResult.WithParsed<TCommand>(command =>
             {
                 var output = func(command);
@@ -24,7 +24,7 @@ namespace VkStatusChanger.Worker.Controllers.Common
             });
 
         public async Task MapCommandAsync<TCommand>(Func<TCommand, Task<string>> func)
-            where TCommand : Command
+            where TCommand : BaseCommand
         {
             Func<TCommand, Task> funcWrapper = async command =>
             {

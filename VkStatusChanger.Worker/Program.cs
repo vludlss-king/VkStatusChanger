@@ -32,12 +32,12 @@ namespace VkStatusChanger
             builder.Services.AddHttpClients();
             builder.Services.AddSerilog();
 
-            var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);
+            var parserResult = Parser.Default.ParseVerbs<Command.Start, Command.Settings>(args);
             builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult));
 
-            parserResult.WithParsed<StartCommand>(command => builder.Services.AddJobScheduler());
+            parserResult.WithParsed<Command.Start>(command => builder.Services.AddJobScheduler());
 
-            if(parserResult.TypeInfo.Current != typeof(StartCommand))
+            if(parserResult.TypeInfo.Current != typeof(Command.Start))
                 builder.Services.AddControllers();
 
             var host = builder.Build();

@@ -15,7 +15,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsManagerStub = new Mock<ISettingsManager>();
             settingsManagerStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new Settings()
+                .Returns(Task.FromResult(new UserSettingsModel()
                 {
                     Type = SettingsType.Schedule
                 }));
@@ -37,7 +37,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsManagerStub = new Mock<ISettingsManager>();
             settingsManagerStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new Settings()
+                .Returns(Task.FromResult(new UserSettingsModel()
                 {
                     Type = SettingsType.Schedule
                 }));
@@ -57,7 +57,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsManagerStub = new Mock<ISettingsManager>();
             settingsManagerStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new Settings()
+                .Returns(Task.FromResult(new UserSettingsModel()
                 {
                     AccessToken = accessToken
                 }));
@@ -77,7 +77,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsManagerStub = new Mock<ISettingsManager>();
             settingsManagerStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new Settings()
+                .Returns(Task.FromResult(new UserSettingsModel()
                 {
                     AccessToken = accessToken
                 }));
@@ -97,7 +97,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsManagerStub = new Mock<ISettingsManager>();
             settingsManagerStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new Settings()
+                .Returns(Task.FromResult(new UserSettingsModel()
                 {
                     AccessToken = accessToken
                 }));
@@ -116,7 +116,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var settingsManagerStub = new Mock<ISettingsManager>();
             settingsManagerStub
                 .Setup(setup => setup.Read())
-                .Returns(Task.FromResult(new Settings()
+                .Returns(Task.FromResult(new UserSettingsModel()
                 {
                     Every = new Every
                     {

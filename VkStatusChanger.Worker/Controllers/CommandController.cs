@@ -18,20 +18,20 @@ namespace VkStatusChanger.Worker.Controllers
 
         public override async Task ExecuteCommand()
         {
-            MapCommand<SettingsCommand.ResetCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.TypeCommand.SetCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.TypeCommand.ShowCommand>(Execute);
+            MapCommand<Command.Settings.Reset>(Execute);
+            await MapCommandAsync<Command.Settings.Type.Set>(Execute);
+            await MapCommandAsync<Command.Settings.Type.Show>(Execute);
 
-            await MapCommandAsync<SettingsCommand.AuthCommand.SetCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.AuthCommand.ShowCommand>(Execute);
+            await MapCommandAsync<Command.Settings.Auth.Set>(Execute);
+            await MapCommandAsync<Command.Settings.Auth.Show>(Execute);
 
-            await MapCommandAsync<SettingsCommand.EveryCommand.SetCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.EveryCommand.ShowCommand>(Execute);
+            await MapCommandAsync<Command.Settings.Every.Set>(Execute);
+            await MapCommandAsync<Command.Settings.Every.Show>(Execute);
 
-            await MapCommandAsync<SettingsCommand.ScheduleCommand.AddCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.ScheduleCommand.EditCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.ScheduleCommand.RemoveCommand>(Execute);
-            await MapCommandAsync<SettingsCommand.ScheduleCommand.ListCommand>(Execute);
+            await MapCommandAsync<Command.Settings.Schedule.Add>(Execute);
+            await MapCommandAsync<Command.Settings.Schedule.Edit>(Execute);
+            await MapCommandAsync<Command.Settings.Schedule.Remove>(Execute);
+            await MapCommandAsync<Command.Settings.Schedule.List>(Execute);
 
             Environment.Exit(0);
         }
@@ -39,7 +39,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings reset
         /// </summary>
-        public string Execute(SettingsCommand.ResetCommand command)
+        public string Execute(Command.Settings.Reset command)
         {
             _settingsManager.Reset();
 
@@ -50,7 +50,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings type set
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.TypeCommand.SetCommand command)
+        public async Task<string> Execute(Command.Settings.Type.Set command)
         {
             var settings = await _settingsManager.Read();
 
@@ -65,7 +65,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings type show
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.TypeCommand.ShowCommand command)
+        public async Task<string> Execute(Command.Settings.Type.Show command)
         {
             var settings = await _settingsManager.Read();
 
@@ -76,7 +76,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings auth set
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.AuthCommand.SetCommand command)
+        public async Task<string> Execute(Command.Settings.Auth.Set command)
         {
             var settings = await _settingsManager.Read();
 
@@ -91,7 +91,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings auth show
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.AuthCommand.ShowCommand command)
+        public async Task<string> Execute(Command.Settings.Auth.Show command)
         {
             var settings = await _settingsManager.Read();
 
@@ -106,7 +106,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings every set
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.EveryCommand.SetCommand command)
+        public async Task<string> Execute(Command.Settings.Every.Set command)
         {
             var settings = await _settingsManager.Read();
 
@@ -122,7 +122,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings every show
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.EveryCommand.ShowCommand command)
+        public async Task<string> Execute(Command.Settings.Every.Show command)
         {
             var settings = await _settingsManager.Read();
 
@@ -148,7 +148,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings schedule add
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.ScheduleCommand.AddCommand command)
+        public async Task<string> Execute(Command.Settings.Schedule.Add command)
         {
             var settings = await _settingsManager.Read();
 
@@ -169,7 +169,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings schedule edit
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.ScheduleCommand.EditCommand command)
+        public async Task<string> Execute(Command.Settings.Schedule.Edit command)
         {
             var settings = await _settingsManager.Read();
 
@@ -188,7 +188,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings schedule remove
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.ScheduleCommand.RemoveCommand command)
+        public async Task<string> Execute(Command.Settings.Schedule.Remove command)
         {
             var settings = await _settingsManager.Read();
 
@@ -206,7 +206,7 @@ namespace VkStatusChanger.Worker.Controllers
         /// <summary>
         /// Выполнить команду: settings schedule list
         /// </summary>
-        public async Task<string> Execute(SettingsCommand.ScheduleCommand.ListCommand command)
+        public async Task<string> Execute(Command.Settings.Schedule.List command)
         {
             var settings = await _settingsManager.Read();
 

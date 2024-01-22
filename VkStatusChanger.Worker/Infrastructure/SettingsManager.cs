@@ -18,15 +18,15 @@ namespace VkStatusChanger.Worker.Infrastructure
                 File.Create(_settingsFile.Name).Dispose();
         }
 
-        public async Task Write(Settings settings)
+        public async Task Write(UserSettingsModel settings)
         {
             await File.WriteAllTextAsync(_settingsFile.Name, JsonConvert.SerializeObject(settings));
         }
 
-        public async Task<Settings> Read()
+        public async Task<UserSettingsModel> Read()
         {
             string settingsJson = await File.ReadAllTextAsync(_settingsFile.Name);
-            Settings settingsModel = JsonConvert.DeserializeObject<Settings>(settingsJson) ?? new Settings();
+            UserSettingsModel settingsModel = JsonConvert.DeserializeObject<UserSettingsModel>(settingsJson) ?? new UserSettingsModel();
 
             return settingsModel;
         }

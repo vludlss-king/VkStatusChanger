@@ -20,7 +20,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             const string fileName = "settings_auth_set.json";
             var (settingsHelper, sut) = Startup(fileName);
-            SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand
+            Command.Settings.Auth.Set command = new Command.Settings.Auth.Set
             {
                 AccessToken = "NewAccessToken"
             };
@@ -42,7 +42,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             const string fileName = "settings_type_set.json";
             var (settingsHelper, sut) = Startup(fileName);
-            SettingsCommand.TypeCommand.SetCommand command = new SettingsCommand.TypeCommand.SetCommand
+            Command.Settings.Type.Set command = new Command.Settings.Type.Set
             {
                 SettingsType = SettingsType.Schedule
             };
@@ -64,7 +64,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             const string fileName = "settings_every_set.json";
             var (settingsHelper, sut) = Startup(fileName);
-            SettingsCommand.EveryCommand.SetCommand command = new SettingsCommand.EveryCommand.SetCommand
+            Command.Settings.Every.Set command = new Command.Settings.Every.Set
             {
                 StatusesTexts = new List<string> { "Status1", "Status2", "Status3" },
                 Seconds = 60,
@@ -86,7 +86,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             const string fileName = "settings_schedule_add.json";
             var (settingsHelper, sut) = Startup(fileName);
-            SettingsCommand.ScheduleCommand.AddCommand command = new SettingsCommand.ScheduleCommand.AddCommand
+            Command.Settings.Schedule.Add command = new Command.Settings.Schedule.Add
             {
                 StatusText = "Added",
                 Date = new DateTime(2024, 1, 13),
@@ -113,7 +113,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             // Arrange
             const string fileName = "settings_schedule_edit.json";
             var (settingsHelper, sut) = Startup(fileName);
-            SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
+            Command.Settings.Schedule.Add addCommand = new Command.Settings.Schedule.Add
             {
                 StatusText = "Added",
                 Date = new DateTime(2024, 1, 13),
@@ -121,7 +121,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
             await sut.Execute(addCommand);
 
-            SettingsCommand.ScheduleCommand.EditCommand editCommand = new SettingsCommand.ScheduleCommand.EditCommand
+            Command.Settings.Schedule.Edit editCommand = new Command.Settings.Schedule.Edit
             {
                 Id = 1,
                 StatusText = "Edited",
@@ -151,7 +151,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             // Arrange
             const string fileName = "settings_schedule_remove.json";
             var (settingsHelper, sut) = Startup(fileName);
-            SettingsCommand.ScheduleCommand.AddCommand addCommand = new SettingsCommand.ScheduleCommand.AddCommand
+            Command.Settings.Schedule.Add addCommand = new Command.Settings.Schedule.Add
             {
                 StatusText = "Added",
                 Date = new DateTime(2024, 1, 13),
@@ -159,7 +159,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
             await sut.Execute(addCommand);
 
-            SettingsCommand.ScheduleCommand.RemoveCommand removeCommand = new SettingsCommand.ScheduleCommand.RemoveCommand
+            Command.Settings.Schedule.Remove removeCommand = new Command.Settings.Schedule.Remove
             {
                 Id = 1
             };

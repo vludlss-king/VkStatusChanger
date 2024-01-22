@@ -7,11 +7,11 @@ namespace VkStatusChanger.Worker.Contracts.Infrastructure
         /// <summary>
         /// Записать настройки
         /// </summary>
-        Task Write(Settings settings);
+        Task Write(UserSettingsModel settings);
         /// <summary>
         /// Прочитать настройки
         /// </summary>
-        Task<Settings> Read();
+        Task<UserSettingsModel> Read();
         /// <summary>
         /// Сбросить настройки
         /// </summary>

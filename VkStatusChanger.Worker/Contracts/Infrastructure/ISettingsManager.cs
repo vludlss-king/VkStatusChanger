@@ -1,4 +1,5 @@
-﻿using VkStatusChanger.Worker.Models.UserSettings;
+﻿using System.Diagnostics.CodeAnalysis;
+using VkStatusChanger.Worker.Models.UserSettings;
 
 namespace VkStatusChanger.Worker.Contracts.Infrastructure
 {
@@ -11,6 +12,7 @@ namespace VkStatusChanger.Worker.Contracts.Infrastructure
         /// <summary>
         /// Прочитать настройки
         /// </summary>
+        [return: NotNull]
         Task<UserSettingsModel> Read();
         /// <summary>
         /// Сбросить настройки

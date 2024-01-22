@@ -20,7 +20,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                     Type = SettingsType.Schedule
                 }));
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
-            SettingsCommand.TypeCommand.SetCommand command = new SettingsCommand.TypeCommand.SetCommand
+            Command.Settings.Type.Set command = new Command.Settings.Type.Set
             {
                 SettingsType = SettingsType.Schedule
             };
@@ -42,7 +42,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                     Type = SettingsType.Schedule
                 }));
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
-            SettingsCommand.TypeCommand.ShowCommand command = new SettingsCommand.TypeCommand.ShowCommand();
+            Command.Settings.Type.Show command = new Command.Settings.Type.Show();
 
             var output = await sut.Execute(command);
 
@@ -62,7 +62,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                     AccessToken = accessToken
                 }));
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
-            SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand();
+            Command.Settings.Auth.Set command = new Command.Settings.Auth.Set();
 
             var output = await sut.Execute(command);
 
@@ -82,7 +82,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                     AccessToken = accessToken
                 }));
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
-            SettingsCommand.AuthCommand.ShowCommand command = new SettingsCommand.AuthCommand.ShowCommand();
+            Command.Settings.Auth.Show command = new Command.Settings.Auth.Show();
 
             var output = await sut.Execute(command);
 
@@ -102,7 +102,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                     AccessToken = accessToken
                 }));
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
-            SettingsCommand.ResetCommand command = new SettingsCommand.ResetCommand();
+            Command.Settings.Reset command = new Command.Settings.Reset();
 
             var output = sut.Execute(command);
 
@@ -125,7 +125,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                     }
                 }));
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
-            SettingsCommand.EveryCommand.SetCommand command = new SettingsCommand.EveryCommand.SetCommand()
+            Command.Settings.Every.Set command = new Command.Settings.Every.Set()
             {
                 StatusesTexts = new List<string> { "Status1" },
                 Seconds = 30,

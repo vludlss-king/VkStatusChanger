@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using VkStatusChanger.Worker.Tests.Attributes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
@@ -16,7 +16,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var sut = await StartProcess(command);
             RestoreSettings();
 
-            var output = await sut!.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync();
 
             output.Should().Be("Тип настроек изменён.");
         }
@@ -33,7 +33,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             RestoreSettings();
 
             // Act
-            var output = await sut!.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync();
 
             // Assert
             output.Should().Be("Тип настроек: Schedule");
@@ -46,7 +46,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var sut = await StartProcess(command);
             RestoreSettings();
 
-            var output = await sut!.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync();
 
             // Assert
             output.Should().Be("Токен авторизации изменён.");
@@ -64,13 +64,14 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             RestoreSettings();
             
             // Act
-            var output = await sut!.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync();
 
             // Assert
             output.Should().Be("Токен авторизации: NewAccessToken");
         }
 
-        private async Task<Process?> StartProcess(string command)
+        [return: NotNull]
+        private async Task<Process> StartProcess(string command)
         {
             if(!File.Exists(settingsBufferFile))
                 File.Copy(settingsFile, settingsBufferFile);
@@ -86,6 +87,8 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             processStartInfo.RedirectStandardOutput = true;
 
             var process = Process.Start(processStartInfo);
+            if (process is null)
+                throw new Exception("Не удалось создать процесс");
             await process.WaitForExitAsync();
             process.Kill();
 

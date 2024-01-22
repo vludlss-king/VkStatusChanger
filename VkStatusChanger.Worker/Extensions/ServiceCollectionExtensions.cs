@@ -161,7 +161,7 @@ namespace VkStatusChanger.Worker.Extensions
 
         public static IServiceCollection AddControllers(this IServiceCollection services)
         {
-            services.AddHostedService<SettingsCommandController>();
+            services.AddHostedService<CommandController>();
 
             return services;
         }

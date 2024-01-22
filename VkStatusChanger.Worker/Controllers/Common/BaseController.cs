@@ -1,5 +1,4 @@
-﻿using CommandLine;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Models.Commands.Common;
 
@@ -8,7 +7,6 @@ namespace VkStatusChanger.Worker.Controllers.Common
     internal abstract class BaseController : IHostedService
     {
         private readonly ICustomParserResult _parserResult;
-
 
         public BaseController(ICustomParserResult parserResult)
         {

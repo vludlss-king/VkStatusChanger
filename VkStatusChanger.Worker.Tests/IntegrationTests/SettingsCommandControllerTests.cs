@@ -25,7 +25,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 AccessToken = "NewAccessToken"
             };
 
-            await sut.AuthSet(command);
+            await sut.Execute(command);
 
             var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
@@ -47,7 +47,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 SettingsType = SettingsType.Schedule
             };
 
-            await sut.TypeSet(command);
+            await sut.Execute(command);
 
             var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
@@ -70,7 +70,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Seconds = 60,
             };
 
-            await sut.EverySet(command);
+            await sut.Execute(command);
 
             var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
@@ -93,7 +93,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Time = new TimeSpan(6, 5, 30),
             };
 
-            await sut.ScheduleAdd(command);
+            await sut.Execute(command);
 
             var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
@@ -119,7 +119,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
-            await sut.ScheduleAdd(addCommand);
+            await sut.Execute(addCommand);
 
             SettingsCommand.ScheduleCommand.EditCommand editCommand = new SettingsCommand.ScheduleCommand.EditCommand
             {
@@ -130,7 +130,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.ScheduleEdit(editCommand);
+            await sut.Execute(editCommand);
 
             var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
@@ -157,7 +157,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
-            await sut.ScheduleAdd(addCommand);
+            await sut.Execute(addCommand);
 
             SettingsCommand.ScheduleCommand.RemoveCommand removeCommand = new SettingsCommand.ScheduleCommand.RemoveCommand
             {
@@ -165,7 +165,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.ScheduleRemove(removeCommand);
+            await sut.Execute(removeCommand);
 
             var settings = await settingsHelper.Read();
             if (File.Exists(fileName))
@@ -177,7 +177,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             settings.Every.Seconds.Should().Be(0);
         }
 
-        private (ISettingsManager settingsManager, SettingsCommandController sut) Startup(string fileName)
+        private (ISettingsManager settingsManager, CommandController sut) Startup(string fileName)
         {
             var settingsFileStub = new Mock<IOptions<SettingsFile>>();
             settingsFileStub
@@ -186,7 +186,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var settingsHelper = new SettingsManager(settingsFileStub.Object);
 
             var parserResultStub = new Mock<ICustomParserResult>();
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsHelper);
+            var sut = new CommandController(parserResultStub.Object, settingsHelper);
 
             return (settingsHelper, sut);
         }

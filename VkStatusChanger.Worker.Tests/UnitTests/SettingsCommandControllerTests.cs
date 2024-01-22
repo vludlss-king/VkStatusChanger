@@ -19,13 +19,13 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 {
                     Type = SettingsType.Schedule
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
+            var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.TypeCommand.SetCommand command = new SettingsCommand.TypeCommand.SetCommand
             {
                 SettingsType = SettingsType.Schedule
             };
 
-            var output = await sut.TypeSet(command);
+            var output = await sut.Execute(command);
 
             output.Should().Be("Тип настроек изменён.");
         }
@@ -41,10 +41,10 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 {
                     Type = SettingsType.Schedule
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
+            var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.TypeCommand.ShowCommand command = new SettingsCommand.TypeCommand.ShowCommand();
 
-            var output = await sut.TypeShow(command);
+            var output = await sut.Execute(command);
 
             output.Should().Be($"Тип настроек: {SettingsType.Schedule}");
         }
@@ -61,10 +61,10 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 {
                     AccessToken = accessToken
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
+            var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.AuthCommand.SetCommand command = new SettingsCommand.AuthCommand.SetCommand();
 
-            var output = await sut.AuthSet(command);
+            var output = await sut.Execute(command);
 
             output.Should().Be("Токен авторизации изменён.");
         }
@@ -81,10 +81,10 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 {
                     AccessToken = accessToken
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
+            var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.AuthCommand.ShowCommand command = new SettingsCommand.AuthCommand.ShowCommand();
 
-            var output = await sut.AuthShow(command);
+            var output = await sut.Execute(command);
 
             output.Should().Be($"Токен авторизации: {accessToken}");
         }
@@ -101,10 +101,10 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 {
                     AccessToken = accessToken
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
+            var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.ResetCommand command = new SettingsCommand.ResetCommand();
 
-            var output = sut.Reset(command);
+            var output = sut.Execute(command);
 
             output.Should().Be("Настройки сброшены.");
         }
@@ -124,14 +124,14 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                         Seconds = 30,
                     }
                 }));
-            var sut = new SettingsCommandController(parserResultStub.Object, settingsManagerStub.Object);
+            var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             SettingsCommand.EveryCommand.SetCommand command = new SettingsCommand.EveryCommand.SetCommand()
             {
                 StatusesTexts = new List<string> { "Status1" },
                 Seconds = 30,
             };
 
-            var output = await sut.EverySet(command);
+            var output = await sut.Execute(command);
 
             output.Should().Be("Настройки Every изменены.");
         }

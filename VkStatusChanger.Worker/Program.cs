@@ -21,8 +21,7 @@ namespace VkStatusChanger
         {
             if(!args.Any())
             {
-                Console.WriteLine("С приложением можно работать только через командную строчку, пожалуйста, прочитай документацию.");
-                Console.WriteLine("https://github.com/vludlss-king/VkStatusChanger/blob/main/README.md");
+                Console.WriteLine("Документация: https://github.com/vludlss-king/VkStatusChanger/blob/main/README.md");
                 Console.ReadKey();
                 return;
             }

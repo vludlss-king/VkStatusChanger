@@ -110,7 +110,7 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsManager.Read();
 
-            settings.EverySecondsSchedule.Statuses = command.StatusesTexts.ToList();
+            settings.EverySecondsSchedule.Statuses = command.Statuses.ToList();
             settings.EverySecondsSchedule.Seconds = command.Seconds;
 
             await _settingsManager.Write(settings);
@@ -154,7 +154,7 @@ namespace VkStatusChanger.Worker.Controllers
 
             var scheduleItem = new DateTimeScheduleItem
             {
-                Status = command.StatusText,
+                Status = command.Status,
                 Date = command.Date,
                 Time = command.Time,
             };
@@ -175,7 +175,7 @@ namespace VkStatusChanger.Worker.Controllers
 
             var item = settings.DateTimeSchedule.Items[command.Id - 1];
 
-            item.Status = command.StatusText;
+            item.Status = command.Status;
             item.Date = command.Date;
             item.Time = command.Time;
 

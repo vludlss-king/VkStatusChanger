@@ -66,7 +66,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             Command.Settings.Every.Set command = new Command.Settings.Every.Set
             {
-                StatusesTexts = new List<string> { "Status1", "Status2", "Status3" },
+                Statuses = new List<string> { "Status1", "Status2", "Status3" },
                 Seconds = 60,
             };
 
@@ -76,7 +76,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            settings.EverySecondsSchedule.Statuses.Should().BeEquivalentTo(command.StatusesTexts);
+            settings.EverySecondsSchedule.Statuses.Should().BeEquivalentTo(command.Statuses);
             settings.EverySecondsSchedule.Seconds.Should().Be(command.Seconds);
             settings.DateTimeSchedule.Items.Should().BeEmpty();
         }
@@ -88,7 +88,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             Command.Settings.Schedule.Add command = new Command.Settings.Schedule.Add
             {
-                StatusText = "Added",
+                Status = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
@@ -100,7 +100,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 File.Delete(fileName);
 
             settings.DateTimeSchedule.Items.Count.Should().Be(1);
-            settings.DateTimeSchedule.Items.First().Status.Should().Be(command.StatusText);
+            settings.DateTimeSchedule.Items.First().Status.Should().Be(command.Status);
             settings.DateTimeSchedule.Items.First().Date.Should().Be(command.Date);
             settings.DateTimeSchedule.Items.First().Time.Should().Be(command.Time);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
@@ -115,7 +115,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             Command.Settings.Schedule.Add addCommand = new Command.Settings.Schedule.Add
             {
-                StatusText = "Added",
+                Status = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
@@ -124,7 +124,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             Command.Settings.Schedule.Edit editCommand = new Command.Settings.Schedule.Edit
             {
                 Id = 1,
-                StatusText = "Edited",
+                Status = "Edited",
                 Date = new DateTime(2024, 2, 13),
                 Time = new TimeSpan(7, 5, 30),
             };
@@ -138,7 +138,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
             // Assert
             settings.DateTimeSchedule.Items.Count.Should().Be(1);
-            settings.DateTimeSchedule.Items.First().Status.Should().Be(editCommand.StatusText);
+            settings.DateTimeSchedule.Items.First().Status.Should().Be(editCommand.Status);
             settings.DateTimeSchedule.Items.First().Date.Should().Be(editCommand.Date);
             settings.DateTimeSchedule.Items.First().Time.Should().Be(editCommand.Time);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
@@ -153,7 +153,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var (settingsHelper, sut) = Startup(fileName);
             Command.Settings.Schedule.Add addCommand = new Command.Settings.Schedule.Add
             {
-                StatusText = "Added",
+                Status = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };

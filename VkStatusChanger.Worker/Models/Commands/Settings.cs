@@ -61,7 +61,7 @@ namespace VkStatusChanger.Worker.Models.Commands
                 internal class Set : BaseCommand
                 {
                     [Option("statuses-texts", Required = true, Separator = ',')]
-                    public IEnumerable<string> StatusesTexts { get; set; }
+                    public IEnumerable<string> Statuses { get; set; }
                     [Option("seconds", Required = true)]
                     public int Seconds { get; set; }
                 }
@@ -81,7 +81,7 @@ namespace VkStatusChanger.Worker.Models.Commands
                 internal class Add : BaseCommand
                 {
                     [Option("status-text", Required = true)]
-                    public string StatusText { get; set; }
+                    public string Status { get; set; }
                     [Option("date", Required = true)]
                     public DateTime Date { get; set; }
                     [Option("time", Required = true)]
@@ -94,7 +94,7 @@ namespace VkStatusChanger.Worker.Models.Commands
                     [Option("id", Required = true)]
                     public int Id { get; set; }
                     [Option("status-text", Required = false)]
-                    public string StatusText { get; set; }
+                    public string Status { get; set; }
                     [Option("date", Required = false)]
                     public DateTime Date { get; set; }
                     [Option("time", Required = false)]

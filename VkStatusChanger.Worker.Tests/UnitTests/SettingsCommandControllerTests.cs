@@ -127,7 +127,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var sut = new CommandController(parserResultStub.Object, settingsManagerStub.Object);
             Command.Settings.Every.Set command = new Command.Settings.Every.Set()
             {
-                StatusesTexts = new List<string> { "Status1" },
+                Statuses = new List<string> { "Status1" },
                 Seconds = 30,
             };
 

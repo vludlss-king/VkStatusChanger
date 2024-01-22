@@ -15,17 +15,17 @@ namespace VkStatusChanger.Worker.Infrastructure
             _settingsFile = settingsFile.Value;
 
             if (!File.Exists(_settingsFile.Name))
-                File.Create(_settingsFile.Name!).Dispose();
+                File.Create(_settingsFile.Name).Dispose();
         }
 
         public async Task Write(Settings settings)
         {
-            await File.WriteAllTextAsync(_settingsFile.Name!, JsonConvert.SerializeObject(settings));
+            await File.WriteAllTextAsync(_settingsFile.Name, JsonConvert.SerializeObject(settings));
         }
 
         public async Task<Settings> Read()
         {
-            string settingsJson = await File.ReadAllTextAsync(_settingsFile.Name!);
+            string settingsJson = await File.ReadAllTextAsync(_settingsFile.Name);
             Settings settingsModel = JsonConvert.DeserializeObject<Settings>(settingsJson) ?? new Settings();
 
             return settingsModel;
@@ -36,7 +36,7 @@ namespace VkStatusChanger.Worker.Infrastructure
             if (File.Exists(_settingsFile.Name))
             {
                 File.Delete(_settingsFile.Name);
-                File.Create(_settingsFile.Name!).Dispose();
+                File.Create(_settingsFile.Name).Dispose();
             }
         }
     }

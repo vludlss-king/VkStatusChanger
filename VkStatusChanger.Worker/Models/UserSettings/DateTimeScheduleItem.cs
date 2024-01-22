@@ -1,11 +1,11 @@
 ﻿namespace VkStatusChanger.Worker.Models.UserSettings
 {
-    public class ScheduleItem
+    public class DateTimeScheduleItem
     {
         /// <summary>
-        /// Текст статуса
+        /// Статус
         /// </summary>
-        public string? StatusText { get; set; }
+        public string? Status { get; set; }
         /// <summary>
         /// Дата, в которую установить статус
         /// </summary>

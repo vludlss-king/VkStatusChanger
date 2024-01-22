@@ -110,8 +110,8 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsManager.Read();
 
-            settings.Every.StatusesTexts = command.StatusesTexts.ToList();
-            settings.Every.Seconds = command.Seconds;
+            settings.EverySecondsSchedule.Statuses = command.StatusesTexts.ToList();
+            settings.EverySecondsSchedule.Seconds = command.Seconds;
 
             await _settingsManager.Write(settings);
 
@@ -127,17 +127,17 @@ namespace VkStatusChanger.Worker.Controllers
             var settings = await _settingsManager.Read();
 
             var outputBuilder = new StringBuilder();
-            outputBuilder.AppendLine($"Статусы меняются каждые {settings.Every.Seconds} секунд, список статусов:");
+            outputBuilder.AppendLine($"Статусы меняются каждые {settings.EverySecondsSchedule.Seconds} секунд, список статусов:");
 
-            if (!settings.Every.StatusesTexts.Any())
+            if (!settings.EverySecondsSchedule.Statuses.Any())
             {
                 outputBuilder.AppendLine("отсутствуют");
             }
             else
             {
-                for(int index = 0; index < settings.Every.StatusesTexts.Count; index++)
+                for(int index = 0; index < settings.EverySecondsSchedule.Statuses.Count; index++)
                 {
-                    var statusText = settings.Every.StatusesTexts[index];
+                    var statusText = settings.EverySecondsSchedule.Statuses[index];
                     outputBuilder.AppendLine($"{index + 1}. {statusText}");
                 }
             }
@@ -152,13 +152,13 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsManager.Read();
 
-            var scheduleItem = new ScheduleItem
+            var scheduleItem = new DateTimeScheduleItem
             {
-                StatusText = command.StatusText,
+                Status = command.StatusText,
                 Date = command.Date,
                 Time = command.Time,
             };
-            settings.Schedule.Items.Add(scheduleItem);
+            settings.DateTimeSchedule.Items.Add(scheduleItem);
 
             await _settingsManager.Write(settings);
 
@@ -173,9 +173,9 @@ namespace VkStatusChanger.Worker.Controllers
         {
             var settings = await _settingsManager.Read();
 
-            var item = settings.Schedule.Items[command.Id - 1];
+            var item = settings.DateTimeSchedule.Items[command.Id - 1];
 
-            item.StatusText = command.StatusText;
+            item.Status = command.StatusText;
             item.Date = command.Date;
             item.Time = command.Time;
 
@@ -193,9 +193,9 @@ namespace VkStatusChanger.Worker.Controllers
             var settings = await _settingsManager.Read();
 
             if (command.Id.HasValue)
-                settings.Schedule.Items.RemoveAt(command.Id.Value - 1);
+                settings.DateTimeSchedule.Items.RemoveAt(command.Id.Value - 1);
             else
-                settings.Schedule.Items.RemoveAll(_ => true);
+                settings.DateTimeSchedule.Items.RemoveAll(_ => true);
 
             await _settingsManager.Write(settings);
 
@@ -211,13 +211,13 @@ namespace VkStatusChanger.Worker.Controllers
             var settings = await _settingsManager.Read();
 
             string output = "";
-            if (!settings.Schedule.Items.Any())
+            if (!settings.DateTimeSchedule.Items.Any())
                 output = "Расписания отсутствуют.";
             else
-                for(int index = 0; index < settings.Schedule.Items.Count; index++)
+                for(int index = 0; index < settings.DateTimeSchedule.Items.Count; index++)
                 {
-                    var scheduleItem = settings.Schedule.Items[index];
-                    output = $"{index + 1}. Статус: {scheduleItem.StatusText}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}";
+                    var scheduleItem = settings.DateTimeSchedule.Items[index];
+                    output = $"{index + 1}. Статус: {scheduleItem.Status}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}";
                 }
 
             return output;

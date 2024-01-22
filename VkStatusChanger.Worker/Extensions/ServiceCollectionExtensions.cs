@@ -77,11 +77,11 @@ namespace VkStatusChanger.Worker.Extensions
                             {
                                 triggerCfg.ForJob(everyStatusJobKey)
                                     .StartNow()
-                                    .WithSimpleSchedule(builder => builder.WithIntervalInSeconds(settingsModel.Every.Seconds).RepeatForever());
+                                    .WithSimpleSchedule(builder => builder.WithIntervalInSeconds(settingsModel.EverySecondsSchedule.Seconds).RepeatForever());
 
                                 var dict = new Dictionary<string, object>()
                                 {
-                                    [jobDataKey] = settingsModel.Every.StatusesTexts
+                                    [jobDataKey] = settingsModel.EverySecondsSchedule.Statuses
                                 };
                                 var jobData = new JobDataMap((IDictionary<string, object>)dict);
                                 triggerCfg.UsingJobData(jobData);
@@ -97,10 +97,10 @@ namespace VkStatusChanger.Worker.Extensions
                             quartzCfg.AddJob<ScheduleJob>(scheduleStatusJobKey);
 
                             var dateTimeNow = DateTime.Now;
-                            var scheduleItems = settingsModel.Schedule.Items.Select(item => new
+                            var scheduleItems = settingsModel.DateTimeSchedule.Items.Select(item => new
                             {
                                 DateTime = item.Date.Add(item.Time),
-                                StatusText = item.StatusText
+                                StatusText = item.Status
                             })
                                 .Where(item => item.DateTime > dateTimeNow);
                             foreach (var scheduleItem in scheduleItems)

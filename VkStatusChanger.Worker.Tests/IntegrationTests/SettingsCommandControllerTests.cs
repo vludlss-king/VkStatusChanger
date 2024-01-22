@@ -32,9 +32,9 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 File.Delete(fileName);
 
             settings.AccessToken.Should().Be(command.AccessToken);
-            settings.Every!.StatusesTexts!.Count.Should().Be(0);
-            settings.Every.Seconds.Should().Be(0);
-            settings.Schedule!.Items!.Count.Should().Be(0);
+            settings.EverySecondsSchedule!.Statuses!.Count.Should().Be(0);
+            settings.EverySecondsSchedule.Seconds.Should().Be(0);
+            settings.DateTimeSchedule!.Items!.Count.Should().Be(0);
         }
 
         [Fact]
@@ -54,9 +54,9 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 File.Delete(fileName);
 
             settings.Type.Should().Be(command.SettingsType);
-            settings.Every!.StatusesTexts!.Count.Should().Be(0);
-            settings.Every.Seconds.Should().Be(0);
-            settings.Schedule!.Items!.Count.Should().Be(0);
+            settings.EverySecondsSchedule!.Statuses!.Count.Should().Be(0);
+            settings.EverySecondsSchedule.Seconds.Should().Be(0);
+            settings.DateTimeSchedule!.Items!.Count.Should().Be(0);
         }
 
         [Fact]
@@ -76,9 +76,9 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            settings.Every!.StatusesTexts.Should().BeEquivalentTo(command.StatusesTexts);
-            settings.Every.Seconds.Should().Be(command.Seconds);
-            settings.Schedule!.Items.Should().BeEmpty();
+            settings.EverySecondsSchedule!.Statuses.Should().BeEquivalentTo(command.StatusesTexts);
+            settings.EverySecondsSchedule.Seconds.Should().Be(command.Seconds);
+            settings.DateTimeSchedule!.Items.Should().BeEmpty();
         }
 
         [Fact]
@@ -99,12 +99,12 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            settings.Schedule!.Items!.Count.Should().Be(1);
-            settings.Schedule.Items.First().StatusText.Should().Be(command.StatusText);
-            settings.Schedule.Items.First().Date.Should().Be(command.Date);
-            settings.Schedule.Items.First().Time.Should().Be(command.Time);
-            settings.Every!.StatusesTexts!.Count.Should().Be(0);
-            settings.Every.Seconds.Should().Be(0);
+            settings.DateTimeSchedule!.Items!.Count.Should().Be(1);
+            settings.DateTimeSchedule.Items.First().Status.Should().Be(command.StatusText);
+            settings.DateTimeSchedule.Items.First().Date.Should().Be(command.Date);
+            settings.DateTimeSchedule.Items.First().Time.Should().Be(command.Time);
+            settings.EverySecondsSchedule!.Statuses!.Count.Should().Be(0);
+            settings.EverySecondsSchedule.Seconds.Should().Be(0);
         }
 
         [Fact]
@@ -137,12 +137,12 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 File.Delete(fileName);
 
             // Assert
-            settings.Schedule!.Items!.Count.Should().Be(1);
-            settings.Schedule.Items.First().StatusText.Should().Be(editCommand.StatusText);
-            settings.Schedule.Items.First().Date.Should().Be(editCommand.Date);
-            settings.Schedule.Items.First().Time.Should().Be(editCommand.Time);
-            settings.Every!.StatusesTexts!.Count.Should().Be(0);
-            settings.Every.Seconds.Should().Be(0);
+            settings.DateTimeSchedule!.Items!.Count.Should().Be(1);
+            settings.DateTimeSchedule.Items.First().Status.Should().Be(editCommand.StatusText);
+            settings.DateTimeSchedule.Items.First().Date.Should().Be(editCommand.Date);
+            settings.DateTimeSchedule.Items.First().Time.Should().Be(editCommand.Time);
+            settings.EverySecondsSchedule!.Statuses!.Count.Should().Be(0);
+            settings.EverySecondsSchedule.Seconds.Should().Be(0);
         }
 
         [Fact]
@@ -172,9 +172,9 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 File.Delete(fileName);
 
             // Assert
-            settings.Schedule!.Items!.Count.Should().Be(0);
-            settings.Every!.StatusesTexts!.Count.Should().Be(0);
-            settings.Every.Seconds.Should().Be(0);
+            settings.DateTimeSchedule!.Items!.Count.Should().Be(0);
+            settings.EverySecondsSchedule!.Statuses!.Count.Should().Be(0);
+            settings.EverySecondsSchedule.Seconds.Should().Be(0);
         }
 
         private (ISettingsManager settingsManager, CommandController sut) Startup(string fileName)

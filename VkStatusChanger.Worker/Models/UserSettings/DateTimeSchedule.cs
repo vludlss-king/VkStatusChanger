@@ -1,10 +1,10 @@
 ﻿namespace VkStatusChanger.Worker.Models.UserSettings
 {
-    public class Schedule
+    public class DateTimeSchedule
     {
         /// <summary>
         /// Расписания смены статусов
         /// </summary>
-        public List<ScheduleItem> Items { get; set; } = new();
+        public List<DateTimeScheduleItem> Items { get; set; } = new();
     }
 }

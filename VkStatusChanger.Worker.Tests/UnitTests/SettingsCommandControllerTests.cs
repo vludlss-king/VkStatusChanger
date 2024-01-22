@@ -118,9 +118,9 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 .Setup(setup => setup.Read())
                 .Returns(Task.FromResult(new UserSettingsModel()
                 {
-                    Every = new Every
+                    EverySecondsSchedule = new EverySecondsSchedule
                     {
-                        StatusesTexts = new List<string> { "Status1" },
+                        Statuses = new List<string> { "Status1" },
                         Seconds = 30,
                     }
                 }));

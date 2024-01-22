@@ -1,11 +1,11 @@
 ﻿namespace VkStatusChanger.Worker.Models.UserSettings
 {
-    public class Every
+    public class EverySecondsSchedule
     {
         /// <summary>
-        /// Тексты статусов
+        /// Статусы
         /// </summary>
-        public List<string> StatusesTexts { get; set; } = new();
+        public List<string> Statuses { get; set; } = new();
         /// <summary>
         /// Через сколько секунд менять статус
         /// </summary>

@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using VkStatusChanger.Worker.Commands;
+using VkStatusChanger.Worker.Commands.Impl;
+using VkStatusChanger.Worker.Contracts;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Infrastructure;
@@ -6,9 +9,9 @@ using VkStatusChanger.Worker.Models;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
-    public class SettingsCommandControllerTests
+    public class CommandsSettingsTests
     {
-        public SettingsCommandControllerTests()
+        public CommandsSettingsTests()
         {
             
         }
@@ -16,18 +19,23 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         [Fact]
         public async Task Settings_auth_set_command_works_properly()
         {
+            // Arrange
             const string fileName = "settings_auth_set.json";
-            var (settingsHelper, sut) = Startup(fileName);
-            Command.Settings.Auth.Set command = new Command.Settings.Auth.Set
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            var settingsManager = Startup(fileName);
+            var sut = new Settings_Auth_Set_Command(settingsManager);
+            Routes.Settings.Auth.Set command = new Routes.Settings.Auth.Set
             {
                 AccessToken = "NewAccessToken"
             };
 
+            // Act
             await sut.Execute(command);
 
-            var settings = await settingsHelper.Read();
-            if (File.Exists(fileName))
-                File.Delete(fileName);
+            // Assert
+            var settings = await settingsManager.Read();
 
             settings.AccessToken.Should().Be(command.AccessToken);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
@@ -38,18 +46,23 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         [Fact]
         public async Task Settings_type_set_command_works_properly()
         {
+            // Arrange
             const string fileName = "settings_type_set.json";
-            var (settingsHelper, sut) = Startup(fileName);
-            Command.Settings.Type.Set command = new Command.Settings.Type.Set
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            var settingsManager = Startup(fileName);
+            var sut = new Settings_Type_Set_Command(settingsManager);
+            Routes.Settings.Type.Set command = new Routes.Settings.Type.Set
             {
                 SettingsType = SettingsType.Schedule
             };
 
+            // Act
             await sut.Execute(command);
 
-            var settings = await settingsHelper.Read();
-            if (File.Exists(fileName))
-                File.Delete(fileName);
+            // Assert
+            var settings = await settingsManager.Read();
 
             settings.Type.Should().Be(command.SettingsType);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
@@ -60,19 +73,24 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         [Fact]
         public async Task Settings_every_set_command_works_properly()
         {
+            // Arrange
             const string fileName = "settings_every_set.json";
-            var (settingsHelper, sut) = Startup(fileName);
-            Command.Settings.Every.Set command = new Command.Settings.Every.Set
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            var settingsManager = Startup(fileName);
+            var sut = new Settings_Every_Set_Command(settingsManager);
+            Routes.Settings.Every.Set command = new Routes.Settings.Every.Set
             {
                 Statuses = new List<string> { "Status1", "Status2", "Status3" },
                 Seconds = 60,
             };
 
+            // Act
             await sut.Execute(command);
 
-            var settings = await settingsHelper.Read();
-            if (File.Exists(fileName))
-                File.Delete(fileName);
+            // Assert
+            var settings = await settingsManager.Read();
 
             settings.EverySecondsSchedule.Statuses.Should().BeEquivalentTo(command.Statuses);
             settings.EverySecondsSchedule.Seconds.Should().Be(command.Seconds);
@@ -82,20 +100,25 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         [Fact]
         public async Task Settings_schedule_add_command_works_properly()
         {
+            // Arrange
             const string fileName = "settings_schedule_add.json";
-            var (settingsHelper, sut) = Startup(fileName);
-            Command.Settings.Schedule.Add command = new Command.Settings.Schedule.Add
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            var settingsManager = Startup(fileName);
+            var sut = new Settings_Schedule_Add_Command(settingsManager);
+            Routes.Settings.Schedule.Add command = new Routes.Settings.Schedule.Add
             {
                 Status = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
 
+            // Act
             await sut.Execute(command);
 
-            var settings = await settingsHelper.Read();
-            if (File.Exists(fileName))
-                File.Delete(fileName);
+            // Assert
+            var settings = await settingsManager.Read();
 
             settings.DateTimeSchedule.Items.Count.Should().Be(1);
             settings.DateTimeSchedule.Items.First().Status.Should().Be(command.Status);
@@ -110,16 +133,22 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string fileName = "settings_schedule_edit.json";
-            var (settingsHelper, sut) = Startup(fileName);
-            Command.Settings.Schedule.Add addCommand = new Command.Settings.Schedule.Add
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            var settingsManager = Startup(fileName);
+
+            var addCommand = new Settings_Schedule_Add_Command(settingsManager);
+            Routes.Settings.Schedule.Add addRequest = new Routes.Settings.Schedule.Add
             {
                 Status = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
-            await sut.Execute(addCommand);
+            await addCommand.Execute(addRequest);
 
-            Command.Settings.Schedule.Edit editCommand = new Command.Settings.Schedule.Edit
+            var sut = new Settings_Schedule_Edit_Command(settingsManager);
+            Routes.Settings.Schedule.Edit sutRequest = new Routes.Settings.Schedule.Edit
             {
                 Id = 1,
                 Status = "Edited",
@@ -128,17 +157,15 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(editCommand);
-
-            var settings = await settingsHelper.Read();
-            if (File.Exists(fileName))
-                File.Delete(fileName);
+            await sut.Execute(sutRequest);
 
             // Assert
+            var settings = await settingsManager.Read();
+
             settings.DateTimeSchedule.Items.Count.Should().Be(1);
-            settings.DateTimeSchedule.Items.First().Status.Should().Be(editCommand.Status);
-            settings.DateTimeSchedule.Items.First().Date.Should().Be(editCommand.Date);
-            settings.DateTimeSchedule.Items.First().Time.Should().Be(editCommand.Time);
+            settings.DateTimeSchedule.Items.First().Status.Should().Be(sutRequest.Status);
+            settings.DateTimeSchedule.Items.First().Date.Should().Be(sutRequest.Date);
+            settings.DateTimeSchedule.Items.First().Time.Should().Be(sutRequest.Time);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
             settings.EverySecondsSchedule.Seconds.Should().Be(0);
         }
@@ -148,34 +175,38 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string fileName = "settings_schedule_remove.json";
-            var (settingsHelper, sut) = Startup(fileName);
-            Command.Settings.Schedule.Add addCommand = new Command.Settings.Schedule.Add
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            var settingsManager = Startup(fileName);
+
+            var addCommand = new Settings_Schedule_Add_Command(settingsManager);
+            Routes.Settings.Schedule.Add addRequest = new Routes.Settings.Schedule.Add
             {
                 Status = "Added",
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
-            await sut.Execute(addCommand);
+            await addCommand.Execute(addRequest);
 
-            Command.Settings.Schedule.Remove removeCommand = new Command.Settings.Schedule.Remove
+            var sut = new Settings_Schedule_Remove_Command(settingsManager);
+            Routes.Settings.Schedule.Remove sutRequest = new Routes.Settings.Schedule.Remove
             {
                 Id = 1
             };
 
             // Act
-            await sut.Execute(removeCommand);
-
-            var settings = await settingsHelper.Read();
-            if (File.Exists(fileName))
-                File.Delete(fileName);
+            await sut.Execute(sutRequest);
 
             // Assert
+            var settings = await settingsManager.Read();
+
             settings.DateTimeSchedule.Items.Count.Should().Be(0);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
             settings.EverySecondsSchedule.Seconds.Should().Be(0);
         }
 
-        private (ISettingsManager settingsManager, CommandController sut) Startup(string fileName)
+        private ISettingsManager Startup(string fileName)
         {
             var settingsFileStub = new Mock<IOptions<SettingsFile>>();
             settingsFileStub
@@ -183,10 +214,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 .Returns(new SettingsFile { Name = fileName });
             var settingsHelper = new SettingsManager(settingsFileStub.Object);
 
-            var parserResultStub = new Mock<ICustomParserResult>();
-            var sut = new CommandController(parserResultStub.Object, settingsHelper);
-
-            return (settingsHelper, sut);
+            return settingsHelper;
         }
     }
 }

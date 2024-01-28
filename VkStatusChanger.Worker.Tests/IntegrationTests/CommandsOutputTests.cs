@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {
-    [Collection(nameof(ConsoleCommandsTests))]
-    public class ConsoleCommandsTests
+    [Collection(nameof(CommandsOutputTests))]
+    public class CommandsOutputTests
     {
         const string settingsFile = "settings.json";
         const string settingsBufferFile = $"settings_buffer.json";
@@ -13,7 +14,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         public async Task Settings_type_set_command_shows_expected_output_to_console()
         {
             const string command = "settings type set --settings-type Every";
-            var sut = await StartProcess(command);
+            var sut = await ExecuteCommand(command);
             RestoreSettings();
 
             var output = await sut.StandardOutput.ReadLineAsync();
@@ -26,10 +27,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string typeSetCommand = "settings type set --settings-type Schedule";
-            await StartProcess(typeSetCommand);
+            await ExecuteCommand(typeSetCommand);
 
             const string typeShowCommand = "settings type show";
-            var sut = await StartProcess(typeShowCommand);
+            var sut = await ExecuteCommand(typeShowCommand);
             RestoreSettings();
 
             // Act
@@ -43,7 +44,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         public async Task Settings_auth_set_command_shows_expected_output_to_console()
         {
             const string command = "settings auth set --access-token NewAccessToken";
-            var sut = await StartProcess(command);
+            var sut = await ExecuteCommand(command);
             RestoreSettings();
 
             var output = await sut.StandardOutput.ReadLineAsync();
@@ -57,10 +58,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string authSetCommand = "settings auth set --access-token NewAccessToken";
-            await StartProcess(authSetCommand);
+            await ExecuteCommand(authSetCommand);
 
             const string authShowCommand = "settings auth show";
-            var sut = await StartProcess(authShowCommand);
+            var sut = await ExecuteCommand(authShowCommand);
             RestoreSettings();
             
             // Act
@@ -71,14 +72,14 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [return: NotNull]
-        private async Task<Process> StartProcess(string command)
+        private async Task<Process> ExecuteCommand(string command)
         {
-            if(!File.Exists(settingsBufferFile))
+            if (!File.Exists(settingsBufferFile) && File.Exists(settingsFile))
                 File.Copy(settingsFile, settingsBufferFile);
 
             var processStartInfo = new ProcessStartInfo();
             processStartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
-            processStartInfo.FileName = "VkStatusChanger.Worker.exe";
+            processStartInfo.FileName = $"{Assembly.GetAssembly(typeof(Program))!.GetName().Name}.exe";
             processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             processStartInfo.CreateNoWindow = true;
             processStartInfo.UseShellExecute = false;
@@ -89,6 +90,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             var process = Process.Start(processStartInfo);
             if (process is null)
                 throw new Exception("Не удалось создать процесс");
+
             await process.WaitForExitAsync();
             process.Kill();
 
@@ -97,13 +99,18 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
 
         private void RestoreSettings()
         {
-            File.Delete(settingsFile);
-            File.Copy(settingsBufferFile, settingsFile);
-            File.Delete(settingsBufferFile);
+            if(File.Exists(settingsFile))
+                File.Delete(settingsFile);
+
+            if (File.Exists(settingsBufferFile))
+            {
+                File.Copy(settingsBufferFile, settingsFile);
+                File.Delete(settingsBufferFile);
+            }
         }
     }
 
-    [CollectionDefinition(nameof(ConsoleCommandsTests), DisableParallelization = true)]
+    [CollectionDefinition(nameof(CommandsOutputTests), DisableParallelization = true)]
     public class ConsoleCommandsCollection
     {
 

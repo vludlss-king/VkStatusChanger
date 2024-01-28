@@ -1,8 +1,7 @@
-﻿namespace VkStatusChanger.Worker.Enums
+﻿namespace VkStatusChanger.Worker.Enums;
+
+public enum SettingsType
 {
-    public enum SettingsType
-    {
-        Every,
-        Schedule
-    }
+    Every,
+    Schedule
 }

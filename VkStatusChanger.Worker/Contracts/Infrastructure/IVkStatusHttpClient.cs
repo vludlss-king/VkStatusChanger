@@ -1,7 +1,6 @@
-﻿namespace VkStatusChanger.Worker.Contracts.Infrastructure
+﻿namespace VkStatusChanger.Worker.Contracts.Infrastructure;
+
+internal interface IVkStatusHttpClient
 {
-    internal interface IVkStatusHttpClient
-    {
-        Task<bool> SetStatus(string text);
-    }
+    Task<bool> SetStatus(string text);
 }

@@ -11,180 +11,192 @@ using Microsoft.Extensions.Hosting;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure.HttpClients;
 using VkStatusChanger.Worker.Enums;
-using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using VkStatusChanger.Worker.Contracts;
+using VkStatusChanger.Worker.Commands;
 
-namespace VkStatusChanger.Worker.Extensions
+namespace VkStatusChanger.Worker.Extensions;
+
+internal static class ServiceCollectionExtensions
 {
-    internal static class ServiceCollectionExtensions
+    public static IServiceCollection AddHttpClients(this IServiceCollection services)
     {
-        public static IServiceCollection AddHttpClients(this IServiceCollection services)
-        {
-            services.AddVkApi();
-            services.AddScoped<IVkStatusHttpClient, VkStatusHttpClient>();
+        services.AddVkApi();
+        services.AddScoped<IVkStatusHttpClient, VkStatusHttpClient>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddVkApi(this IServiceCollection services)
+    private static IServiceCollection AddVkApi(this IServiceCollection services)
+    {
+        services.AddScoped<IVkApi>(provider =>
         {
-            services.AddScoped<IVkApi>(provider =>
+            var inputArgs = provider.GetRequiredService<IOptions<Auth>>().Value;
+
+            var vkApi = new VkApi();
+
+            var authParams = new ApiAuthParams
             {
-                var inputArgs = provider.GetRequiredService<IOptions<Authorization>>().Value;
+                AccessToken = inputArgs.AccessToken
+            };
 
-                var vkApi = new VkApi();
+            vkApi.Authorize(authParams);
 
-                var authParams = new ApiAuthParams
-                {
-                    AccessToken = inputArgs.AccessToken
-                };
+            return vkApi;
+        });
 
-                vkApi.Authorize(authParams);
+        services.AddScoped<IVkStatusHttpClient, VkStatusHttpClient>();
 
-                return vkApi;
-            });
+        return services;
+    }
 
-            services.AddScoped<IVkStatusHttpClient, VkStatusHttpClient>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddJobScheduler(this IServiceCollection services)
+    public static IServiceCollection AddJobScheduler(this IServiceCollection services)
+    {
+        services.AddQuartz(quartzCfg =>
         {
-            services.AddQuartz(quartzCfg =>
+            quartzCfg.UseInMemoryStore();
+            quartzCfg.UseDefaultThreadPool(1);
+
+            var provider = services.BuildServiceProvider();
+            var settingsManager = provider.GetRequiredService<ISettingsManager>();
+            var logger = provider.GetRequiredService<ILogger<Program>>();
+
+            var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
+
+            const string jobDataKey = "statusText";
+            switch (settingsModel.Type)
             {
-                quartzCfg.UseInMemoryStore();
-                quartzCfg.UseDefaultThreadPool(1);
+                case SettingsType.Every:
+                    {
+                        var everyStatusJobKey = new JobKey(nameof(EveryJob));
+                        quartzCfg.AddJob<EveryJob>(everyStatusJobKey);
 
-                var provider = services.BuildServiceProvider();
-                var settingsManager = provider.GetRequiredService<ISettingsManager>();
-                var logger = provider.GetRequiredService<ILogger<Program>>();
-
-                var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
-
-                const string jobDataKey = "statusText";
-                switch (settingsModel.Type)
-                {
-                    case SettingsType.Every:
+                        quartzCfg.AddTrigger(triggerCfg =>
                         {
-                            var everyStatusJobKey = new JobKey(nameof(EveryJob));
-                            quartzCfg.AddJob<EveryJob>(everyStatusJobKey);
+                            triggerCfg.ForJob(everyStatusJobKey)
+                                .StartNow()
+                                .WithSimpleSchedule(builder => builder.WithIntervalInSeconds(settingsModel.EverySecondsSchedule.Seconds).RepeatForever());
 
+                            var dict = new Dictionary<string, object>()
+                            {
+                                [jobDataKey] = settingsModel.EverySecondsSchedule.Statuses
+                            };
+                            var jobData = new JobDataMap((IDictionary<string, object>)dict);
+                            triggerCfg.UsingJobData(jobData);
+                        });
+
+                        logger.LogInformation("Выбран тип настроек Every");
+
+                        break;
+                    }
+                case SettingsType.Schedule:
+                    {
+                        var scheduleStatusJobKey = new JobKey(nameof(ScheduleJob));
+                        quartzCfg.AddJob<ScheduleJob>(scheduleStatusJobKey);
+
+                        var dateTimeNow = DateTime.Now;
+                        var scheduleItems = settingsModel.DateTimeSchedule.Items.Select(item => new
+                        {
+                            DateTime = item.Date.Add(item.Time),
+                            StatusText = item.Status
+                        })
+                            .Where(item => item.DateTime > dateTimeNow);
+                        foreach (var scheduleItem in scheduleItems)
+                        {
                             quartzCfg.AddTrigger(triggerCfg =>
                             {
-                                triggerCfg.ForJob(everyStatusJobKey)
-                                    .StartNow()
-                                    .WithSimpleSchedule(builder => builder.WithIntervalInSeconds(settingsModel.EverySecondsSchedule.Seconds).RepeatForever());
+                                triggerCfg.ForJob(scheduleStatusJobKey)
+                                    .StartAt(scheduleItem.DateTime);
 
-                                var dict = new Dictionary<string, object>()
-                                {
-                                    [jobDataKey] = settingsModel.EverySecondsSchedule.Statuses
-                                };
-                                var jobData = new JobDataMap((IDictionary<string, object>)dict);
-                                triggerCfg.UsingJobData(jobData);
+                                triggerCfg.UsingJobData(jobDataKey, scheduleItem.StatusText!);
                             });
-
-                            logger.LogInformation("Выбран тип настроек Every");
-
-                            break;
                         }
-                    case SettingsType.Schedule:
-                        {
-                            var scheduleStatusJobKey = new JobKey(nameof(ScheduleJob));
-                            quartzCfg.AddJob<ScheduleJob>(scheduleStatusJobKey);
 
-                            var dateTimeNow = DateTime.Now;
-                            var scheduleItems = settingsModel.DateTimeSchedule.Items.Select(item => new
-                            {
-                                DateTime = item.Date.Add(item.Time),
-                                StatusText = item.Status
-                            })
-                                .Where(item => item.DateTime > dateTimeNow);
-                            foreach (var scheduleItem in scheduleItems)
-                            {
-                                quartzCfg.AddTrigger(triggerCfg =>
-                                {
-                                    triggerCfg.ForJob(scheduleStatusJobKey)
-                                        .StartAt(scheduleItem.DateTime);
+                        logger.LogInformation("Выбран тип настроек Schedule");
 
-                                    triggerCfg.UsingJobData(jobDataKey, scheduleItem.StatusText!);
-                                });
-                            }
+                        break;
+                    }
+            }
+        });
 
-                            logger.LogInformation("Выбран тип настроек Schedule");
-
-                            break;
-                        }
-                }
-            });
-
-            services.AddQuartzHostedService(options =>
-            {
-                options.WaitForJobsToComplete = true;
-            });
-
-            return services;
-        }
-
-        public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration)
+        services.AddQuartzHostedService(options =>
         {
-            services.AddSingleton(provider => Options.Create(new SettingsFile { Name = "settings.json" }));
-            services.AddSingleton<ISettingsManager, SettingsManager>();
+            options.WaitForJobsToComplete = true;
+        });
 
-            services.AddSingleton(provider =>
-            {
-                var settingsManager = provider.GetRequiredService<ISettingsManager>();
-                var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
-                return Options.Create(settingsModel);
-            });
+        return services;
+    }
 
-            configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<Authorization>();
-            services.AddSingleton(provider =>
-            {
-                var env = provider.GetRequiredService<IHostEnvironment>();
-                var configuration = provider.GetRequiredService<IConfiguration>();
-                var settingsManager = provider.GetRequiredService<ISettingsManager>();
-                var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
+    public static IServiceCollection AddConfiguration(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddSingleton(provider => Options.Create(new SettingsFile { Name = "settings.json" }));
+        services.AddSingleton<ISettingsManager, SettingsManager>();
 
-                if (env.IsDevelopment())
-                    return Options.Create(configuration.Get<Authorization>()!);
-                else
-                    return Options.Create(new Authorization { AccessToken = settingsModel.AccessToken });
-            });
-
-            return services;
-        }
-
-        public static IServiceCollection AddControllers(this IServiceCollection services)
+        services.AddSingleton(provider =>
         {
-            services.AddHostedService<CommandController>();
+            var settingsManager = provider.GetRequiredService<ISettingsManager>();
+            var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
+            return Options.Create(settingsModel);
+        });
 
-            return services;
-        }
-
-        public static IServiceCollection AddSerilog(this IServiceCollection services)
+        configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddUserSecrets<Auth>();
+        services.AddSingleton(provider =>
         {
-            services.AddSerilog((provider, cfg) =>
+            var env = provider.GetRequiredService<IHostEnvironment>();
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            var settingsManager = provider.GetRequiredService<ISettingsManager>();
+            var settingsModel = settingsManager.Read().GetAwaiter().GetResult();
+
+            if (env.IsDevelopment())
+                return Options.Create(configuration.Get<Auth>()!);
+            else
+                return Options.Create(new Auth { AccessToken = settingsModel.AccessToken });
+        });
+
+        return services;
+    }
+
+    public static IServiceCollection AddCommandHandler(this IServiceCollection services)
+    {
+        services.AddHostedService<Handler>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddSerilog(this IServiceCollection services)
+    {
+        services.AddSerilog((provider, cfg) =>
+        {
+            var env = provider.GetRequiredService<IHostEnvironment>();
+
+            cfg.Enrich.FromLogContext()
+                .WriteTo.Console();
+
+            if (env.IsProduction())
             {
-                var env = provider.GetRequiredService<IHostEnvironment>();
+                cfg.MinimumLevel.Override("Microsoft", LogEventLevel.Fatal);
+                cfg.MinimumLevel.Override("Quartz", LogEventLevel.Fatal);
+            }
+            else
+                cfg.MinimumLevel.Information();
+        });
 
-                cfg.Enrich.FromLogContext()
-                    .WriteTo.Console();
+        return services;
+    }
 
-                if (env.IsProduction())
-                {
-                    cfg.MinimumLevel.Override("Microsoft", LogEventLevel.Fatal);
-                    cfg.MinimumLevel.Override("Quartz", LogEventLevel.Fatal);
-                }
-                else
-                    cfg.MinimumLevel.Information();
-            });
+    public static IServiceCollection AddCommands(this IServiceCollection services)
+    {
+        services.Scan(scan =>
+            scan.FromAssembliesOf(typeof(ICommand<>))
+                    .AddClasses(classes => classes.AssignableTo(typeof(ICommand<>)))
+                        .AsMatchingInterface()
+                        .WithScopedLifetime()
+        );
 
-            return services;
-        }
+        return services;
     }
 }

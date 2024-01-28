@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using VkStatusChanger.Worker.Contracts.Infrastructure;
-using VkStatusChanger.Worker.Controllers;
 using VkStatusChanger.Worker.Enums;
 using VkStatusChanger.Worker.Infrastructure;
 using VkStatusChanger.Worker.Models;
-using VkStatusChanger.Worker.Models.Commands;
 
 namespace VkStatusChanger.Worker.Tests.IntegrationTests
 {

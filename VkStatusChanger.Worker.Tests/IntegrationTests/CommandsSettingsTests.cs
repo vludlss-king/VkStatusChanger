@@ -17,7 +17,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_auth_set_command_works_properly()
+        public async Task Settings_auth_set_command_changes_settings_file()
         {
             // Arrange
             const string fileName = "settings_auth_set.json";
@@ -44,7 +44,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_type_set_command_works_properly()
+        public async Task Settings_type_set_command_changes_settings_file()
         {
             // Arrange
             const string fileName = "settings_type_set.json";
@@ -71,7 +71,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_every_set_command_works_properly()
+        public async Task Settings_every_set_command_changes_settings_file()
         {
             // Arrange
             const string fileName = "settings_every_set.json";
@@ -98,7 +98,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_schedule_add_command_works_properly()
+        public async Task Settings_schedule_add_command_changes_settings_file()
         {
             // Arrange
             const string fileName = "settings_schedule_add.json";
@@ -129,7 +129,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_schedule_edit_command_works_properly()
+        public async Task Settings_schedule_edit_command_changes_settings_file()
         {
             // Arrange
             const string fileName = "settings_schedule_edit.json";
@@ -171,7 +171,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Settings_schedule_remove_command_works_properly()
+        public async Task Settings_schedule_remove_command_changes_settings_file()
         {
             // Arrange
             const string fileName = "settings_schedule_remove.json";

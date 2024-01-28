@@ -12,9 +12,6 @@ public class CustomParserResult : ICustomParserResult
         _parserResult = parserResult;    
     }
 
-    public ParserResult<object?> WithParsed<T>(Action<T> action)
-        => _parserResult.WithParsed(action);
-
     public async Task<ParserResult<object>> WithParsedAsync<T>(Func<T, Task> action)
         => await _parserResult.WithParsedAsync(action);
 }

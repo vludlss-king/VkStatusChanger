@@ -191,10 +191,10 @@ internal static class ServiceCollectionExtensions
     public static IServiceCollection AddCommands(this IServiceCollection services)
     {
         services.Scan(scan =>
-            scan.FromAssembliesOf(typeof(ICommand<>))
-                    .AddClasses(classes => classes.AssignableTo(typeof(ICommand<>)))
-                        .AsMatchingInterface()
-                        .WithScopedLifetime()
+            scan.FromAssemblyOf<ICommand>()
+                    .AddClasses(classes => classes.AssignableTo<ICommand>())
+                        .AsImplementedInterfaces()
+                        .WithSingletonLifetime()
         );
 
         return services;

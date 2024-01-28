@@ -21,10 +21,15 @@ internal class Handler : IHostedService
         {
             await _parserResult.WithParsedAsync<dynamic>(async request =>
             {
-                string output = await command.Execute(request);
-                Console.WriteLine(output);
+                if (command.GetType().GetInterface("ICommand`1").GenericTypeArguments[0].FullName == request.GetType().FullName)
+                {
+                    string output = await command.Execute(request);
+                    Console.WriteLine(output);
+                }
             });
         }
+
+        Environment.Exit(0);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

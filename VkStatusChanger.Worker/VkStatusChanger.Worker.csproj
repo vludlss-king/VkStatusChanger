@@ -5,10 +5,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<PublishSingleFile>true</PublishSingleFile>
-	<SelfContained>true</SelfContained>
 	<AssemblyName>Менеджер твоего статуса ВКонтакте</AssemblyName>
 	<ApplicationIcon>app_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuraiton) == 'Release'">
+	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,12 +11,17 @@
 **Версия VK API:**
 5.131
 
+**Фреймворк и язык:**
+- .NET 7
+- C# 11
+
 **Применённые библиотеки:**
 - CommandLineParser
 - Microsoft.Extensions.Hosting
 - Quartz
 - Serilog
 - VkNet
+- Scrutor
 
 **Тестирование:**
 - xUnit

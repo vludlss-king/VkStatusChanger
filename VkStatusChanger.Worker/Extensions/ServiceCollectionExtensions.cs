@@ -71,8 +71,8 @@ internal static class ServiceCollectionExtensions
             {
                 case SettingsType.Every:
                     {
-                        var everyStatusJobKey = new JobKey(nameof(EveryJob));
-                        quartzCfg.AddJob<EveryJob>(everyStatusJobKey);
+                        var everyStatusJobKey = new JobKey(nameof(EverySecondsJob));
+                        quartzCfg.AddJob<EverySecondsJob>(everyStatusJobKey);
 
                         quartzCfg.AddTrigger(triggerCfg =>
                         {
@@ -94,8 +94,8 @@ internal static class ServiceCollectionExtensions
                     }
                 case SettingsType.Schedule:
                     {
-                        var scheduleStatusJobKey = new JobKey(nameof(ScheduleJob));
-                        quartzCfg.AddJob<ScheduleJob>(scheduleStatusJobKey);
+                        var scheduleStatusJobKey = new JobKey(nameof(DateTimeScheduleJob));
+                        quartzCfg.AddJob<DateTimeScheduleJob>(scheduleStatusJobKey);
 
                         var dateTimeNow = DateTime.Now;
                         var scheduleItems = settingsModel.DateTimeSchedule.Items.Select(item => new

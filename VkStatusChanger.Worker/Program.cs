@@ -8,6 +8,7 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure;
 using Microsoft.Extensions.Logging;
 using VkStatusChanger.Worker.Commands;
+using VkNet.Model;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
@@ -24,6 +25,14 @@ internal class Program
             return;
         }
 
+        var host = CreateHost(args);
+        await host.RunAsync();
+
+        Console.ReadKey();
+    }
+
+    static IHost CreateHost(string[] args)
+    {
         var builder = Host.CreateApplicationBuilder(args);
 
         builder.Services.AddConfiguration(builder.Configuration);
@@ -35,15 +44,13 @@ internal class Program
 
         parserResult.WithParsed<Routes.Start>(command => builder.Services.AddJobScheduler());
 
-        if(parserResult.TypeInfo.Current != typeof(Routes.Start))
+        if (parserResult.TypeInfo.Current != typeof(Routes.Start))
         {
             builder.Services.AddCommands();
             builder.Services.AddCommandHandler();
         }
 
         var host = builder.Build();
-        await host.RunAsync();
-
-        Console.ReadKey();
+        return host;
     }
 }

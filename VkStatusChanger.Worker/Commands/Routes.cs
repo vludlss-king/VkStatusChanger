@@ -18,7 +18,6 @@ internal class Routes
         [Verb("reset", HelpText = "Сбросить настройки.")]
         internal class Reset : Route
         {
-
         }
 
         [Verb("type", HelpText = "Тип настроек.")]
@@ -35,7 +34,6 @@ internal class Routes
             [Verb("show", HelpText = "Показать текущий тип настроек.")]
             internal class Show : Route
             {
-
             }
         }
 
@@ -53,7 +51,6 @@ internal class Routes
             [Verb("show", HelpText = "Показать текущую авторизацию.")]
             internal class Show : Route
             {
-
             }
         }
 
@@ -73,7 +70,6 @@ internal class Routes
             [Verb("show", HelpText = "Показать текущие статусы.")]
             internal class Show : Route
             {
-
             }
         }
 
@@ -115,7 +111,6 @@ internal class Routes
             [Verb("list", HelpText = "Показать список текущих статусов.")]
             internal class List : Route
             {
-
             }
         }
     }

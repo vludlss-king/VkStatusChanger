@@ -8,7 +8,6 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure;
 using Microsoft.Extensions.Logging;
 using VkStatusChanger.Worker.Commands;
-using VkNet.Model;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
@@ -40,7 +39,7 @@ internal class Program
         builder.Services.AddSerilog();
 
         var parserResult = Parser.Default.ParseVerbs<Routes.Start, Routes.Settings>(args);
-        builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult));
+        builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult!));
 
         parserResult.WithParsed<Routes.Start>(command => builder.Services.AddJobScheduler());
 

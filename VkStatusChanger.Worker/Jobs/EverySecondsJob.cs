@@ -31,6 +31,8 @@ internal class EverySecondsJob : IJob
                 var isSet = await _vkHttpClient.SetStatus(statusText);
                 if (isSet)
                     _logger.LogInformation("Статус успешно изменён!");
+                else
+                    _logger.LogError("Не удалось изменить статус.");
             }
 
             _refireCount++;

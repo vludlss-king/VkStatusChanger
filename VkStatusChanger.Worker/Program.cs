@@ -8,6 +8,8 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 using VkStatusChanger.Worker.Infrastructure;
 using Microsoft.Extensions.Logging;
 using VkStatusChanger.Worker.Commands;
+using FluentValidation;
+using VkStatusChanger.Worker.Commands.Validators;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
@@ -37,6 +39,7 @@ internal class Program
         builder.Services.AddConfiguration(builder.Configuration);
         builder.Services.AddHttpClients();
         builder.Services.AddSerilog();
+        builder.Services.AddValidatorsFromAssemblyContaining<Settings_Every_Set_Validator>();
 
         var parserResult = Parser.Default.ParseVerbs<Routes.Start, Routes.Settings>(args);
         builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult!));

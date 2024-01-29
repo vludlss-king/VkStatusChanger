@@ -17,17 +17,18 @@ internal class Handler : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (dynamic command in _commands)
+        await _parserResult.WithParsedAsync<dynamic>(async request =>
         {
-            await _parserResult.WithParsedAsync<dynamic>(async request =>
+            foreach (dynamic command in _commands)
             {
                 if (command.GetType().GetInterface("ICommand`1").GenericTypeArguments[0].FullName == request.GetType().FullName)
                 {
                     string output = await command.Execute(request);
                     Console.WriteLine(output);
+                    break;
                 }
-            });
-        }
+            }
+        });
 
         Environment.Exit(0);
     }

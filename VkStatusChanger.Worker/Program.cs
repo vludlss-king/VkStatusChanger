@@ -3,41 +3,56 @@ using VkStatusChanger.Worker.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
-using VkStatusChanger.Worker.HostedServices;
 using System.Runtime.CompilerServices;
-using VkStatusChanger.Worker.Models.Commands;
+using VkStatusChanger.Worker.Contracts.Infrastructure;
+using VkStatusChanger.Worker.Infrastructure;
+using Microsoft.Extensions.Logging;
+using VkStatusChanger.Worker.Commands;
+using FluentValidation;
+using VkStatusChanger.Worker.Commands.Validators;
 
 [assembly: InternalsVisibleTo("VkStatusChanger.Worker.Tests")]
 
-namespace VkStatusChanger
+namespace VkStatusChanger;
+
+internal class Program
 {
-    internal class Program
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
+        if(!args.Any())
         {
-            var builder = Host.CreateApplicationBuilder(args);
-
-            builder.Services.AddConfiguration(builder.Configuration);
-            builder.Services.AddVkHttpClient();
-            builder.Services.AddControllers();
-            builder.Services.AddSerilog(cfg =>
-            {
-                cfg.Enrich.FromLogContext()
-                    .WriteTo.Console();
-            });
-
-            var parserResult = Parser.Default.ParseVerbs<StartCommand, SettingsCommand>(args);
-            builder.Services.AddSingleton(provider => parserResult);
-
-            parserResult.WithParsed<StartCommand>(command => builder.Services.AddJobScheduler());
-
-            if(parserResult.TypeInfo.Current != typeof(StartCommand))
-                builder.Services.AddHostedService<CommandHostedService>();
-
-            var host = builder.Build();
-            await host.RunAsync();
-
+            Console.WriteLine("Документация: https://github.com/vludlss-king/VkStatusChanger/blob/main/README.md");
             Console.ReadKey();
+            return;
         }
+
+        var host = CreateHost(args);
+        await host.RunAsync();
+
+        Console.ReadKey();
+    }
+
+    static IHost CreateHost(string[] args)
+    {
+        var builder = Host.CreateApplicationBuilder(args);
+
+        builder.Services.AddConfiguration(builder.Configuration);
+        builder.Services.AddHttpClients();
+        builder.Services.AddSerilog();
+
+        var parserResult = Parser.Default.ParseVerbs<Routes.Start, Routes.Settings>(args);
+        builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult!));
+
+        parserResult.WithParsed<Routes.Start>(command => builder.Services.AddJobScheduler());
+
+        if (parserResult.TypeInfo.Current != typeof(Routes.Start))
+        {
+            builder.Services.AddCommands();
+            builder.Services.AddCommandHandler();
+            builder.Services.AddValidators();
+        }
+
+        var host = builder.Build();
+        return host;
     }
 }

@@ -12,14 +12,13 @@ internal class Settings_Reset_Command : Command<Routes.Settings.Reset>
         _settingsManager = settingsManager;    
     }
 
-    public override Task<string> Execute(Routes.Settings.Reset request)
+    public override async Task<string> Execute(Routes.Settings.Reset request)
     {
         if (!ModelState.IsValid)
-            return Task.FromResult(BadCommand());
+            return await BadCommand();
 
         _settingsManager.Reset();
 
-        var output = "Настройки сброшены.";
-        return Task.FromResult(output);
+        return await Ok("Настройки сброшены.");
     }
 }

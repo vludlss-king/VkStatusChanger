@@ -15,7 +15,7 @@ internal class Settings_Schedule_Remove_Command : Command<Routes.Settings.Schedu
     public async override Task<string> Execute(Routes.Settings.Schedule.Remove request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -26,7 +26,6 @@ internal class Settings_Schedule_Remove_Command : Command<Routes.Settings.Schedu
 
         await _settingsManager.Write(settings);
 
-        var output = "Расписание удалено.";
-        return output;
+        return await Ok("Расписание удалено.");
     }
 }

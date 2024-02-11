@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace VkStatusChanger.Worker.Contracts
 {
@@ -10,14 +11,17 @@ namespace VkStatusChanger.Worker.Contracts
 
         [AllowNull]
         protected ValidationResult ModelState
-        { 
+        {
             get => _modelState;
             set => _modelState = value ?? new ValidationResult { };
         }
 
         public abstract Task<string> Execute(T request);
 
-        public string BadCommand()
-            => string.Join(",\n", ModelState.Errors.Select(error => error.ErrorMessage));
+        public Task<string> BadCommand()
+            => Task.FromResult(string.Join(",\n", ModelState.Errors.Select(error => error.ErrorMessage)));
+
+        public Task<string> Ok(object output)
+            => Task.FromResult(output.ToString() ?? string.Empty);
     }
 }

@@ -15,7 +15,7 @@ internal class Settings_Schedule_Edit_Command : Command<Routes.Settings.Schedule
     public async override Task<string> Execute(Routes.Settings.Schedule.Edit request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -27,7 +27,6 @@ internal class Settings_Schedule_Edit_Command : Command<Routes.Settings.Schedule
 
         await _settingsManager.Write(settings);
 
-        var output = "Расписание изменено.";
-        return output;
+        return await Ok("Расписание изменено.");
     }
 }

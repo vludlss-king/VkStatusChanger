@@ -15,7 +15,7 @@ internal class Settings_Auth_Set_Command : Command<Routes.Settings.Auth.Set>
     public async override Task<string> Execute(Routes.Settings.Auth.Set request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -23,7 +23,6 @@ internal class Settings_Auth_Set_Command : Command<Routes.Settings.Auth.Set>
 
         await _settingsManager.Write(settings);
 
-        var output = "Токен авторизации изменён.";
-        return output;
+        return await Ok("Токен авторизации изменён.");
     }
 }

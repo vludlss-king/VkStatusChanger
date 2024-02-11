@@ -15,7 +15,7 @@ internal class Settings_Type_Set_Command : Command<Routes.Settings.Type.Set>
     public async override Task<string> Execute(Routes.Settings.Type.Set request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -23,7 +23,6 @@ internal class Settings_Type_Set_Command : Command<Routes.Settings.Type.Set>
 
         await _settingsManager.Write(settings);
 
-        var output = "Тип настроек изменён.";
-        return output;
+        return await Ok("Тип настроек изменён.");
     }
 }

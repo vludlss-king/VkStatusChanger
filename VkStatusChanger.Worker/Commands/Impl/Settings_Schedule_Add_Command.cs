@@ -16,7 +16,7 @@ internal class Settings_Schedule_Add_Command : Command<Routes.Settings.Schedule.
     public async override Task<string> Execute(Routes.Settings.Schedule.Add request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -30,7 +30,6 @@ internal class Settings_Schedule_Add_Command : Command<Routes.Settings.Schedule.
 
         await _settingsManager.Write(settings);
 
-        var output = "Расписание добавлено.";
-        return output;
+        return await Ok("Расписание добавлено.");
     }
 }

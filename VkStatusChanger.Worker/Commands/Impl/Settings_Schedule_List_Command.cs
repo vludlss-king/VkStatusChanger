@@ -15,7 +15,7 @@ internal class Settings_Schedule_List_Command : Command<Routes.Settings.Schedule
     public async override Task<string> Execute(Routes.Settings.Schedule.List request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -29,6 +29,6 @@ internal class Settings_Schedule_List_Command : Command<Routes.Settings.Schedule
                 output = $"{index + 1}. Статус: {scheduleItem.Status}, Дата: {scheduleItem.Date:dd.MM.yyyy}, Время: {scheduleItem.Time}";
             }
 
-        return output;
+        return await Ok(output);
     }
 }

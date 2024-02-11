@@ -15,7 +15,7 @@ internal class Settings_Every_Set_Command : Command<Routes.Settings.Every.Set>
     public async override Task<string> Execute(Routes.Settings.Every.Set request)
     {
         if (!ModelState.IsValid)
-            return BadCommand();
+            return await BadCommand();
 
         var settings = await _settingsManager.Read();
 
@@ -24,7 +24,6 @@ internal class Settings_Every_Set_Command : Command<Routes.Settings.Every.Set>
 
         await _settingsManager.Write(settings);
 
-        var output = "Настройки Every изменены.";
-        return output;
+        return await Ok("Настройки Every изменены.");
     }
 }

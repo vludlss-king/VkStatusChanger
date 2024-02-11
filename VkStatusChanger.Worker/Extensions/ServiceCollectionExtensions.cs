@@ -17,6 +17,9 @@ using Serilog;
 using Serilog.Events;
 using VkStatusChanger.Worker.Contracts;
 using VkStatusChanger.Worker.Commands;
+using VkNet.Enums.StringEnums;
+using VkStatusChanger.Worker.Commands.Validators;
+using FluentValidation;
 
 namespace VkStatusChanger.Worker.Extensions;
 
@@ -193,6 +196,18 @@ internal static class ServiceCollectionExtensions
         services.Scan(scan =>
             scan.FromAssemblyOf<ICommand>()
                     .AddClasses(classes => classes.AssignableTo<ICommand>())
+                        .AsImplementedInterfaces()
+                        .WithSingletonLifetime()
+        );
+
+        return services;
+    }
+
+    public static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        services.Scan(scan =>
+            scan.FromAssemblyOf<Settings_Every_Set_Validator>()
+                    .AddClasses(classes => classes.AssignableTo<IValidator>())
                         .AsImplementedInterfaces()
                         .WithSingletonLifetime()
         );

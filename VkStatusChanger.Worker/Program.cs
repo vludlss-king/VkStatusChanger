@@ -39,7 +39,6 @@ internal class Program
         builder.Services.AddConfiguration(builder.Configuration);
         builder.Services.AddHttpClients();
         builder.Services.AddSerilog();
-        builder.Services.AddValidatorsFromAssemblyContaining<Settings_Every_Set_Validator>();
 
         var parserResult = Parser.Default.ParseVerbs<Routes.Start, Routes.Settings>(args);
         builder.Services.AddSingleton<ICustomParserResult, CustomParserResult>(provider => new CustomParserResult(parserResult!));
@@ -50,6 +49,7 @@ internal class Program
         {
             builder.Services.AddCommands();
             builder.Services.AddCommandHandler();
+            builder.Services.AddValidators();
         }
 
         var host = builder.Build();

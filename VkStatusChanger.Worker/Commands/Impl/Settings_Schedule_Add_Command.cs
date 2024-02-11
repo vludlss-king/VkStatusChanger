@@ -15,6 +15,9 @@ internal class Settings_Schedule_Add_Command : Command<Routes.Settings.Schedule.
 
     public async override Task<string> Execute(Routes.Settings.Schedule.Add request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         var scheduleItem = new DateTimeScheduleItem

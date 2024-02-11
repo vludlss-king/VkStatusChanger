@@ -14,6 +14,9 @@ internal class Settings_Schedule_List_Command : Command<Routes.Settings.Schedule
 
     public async override Task<string> Execute(Routes.Settings.Schedule.List request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         string output = "";

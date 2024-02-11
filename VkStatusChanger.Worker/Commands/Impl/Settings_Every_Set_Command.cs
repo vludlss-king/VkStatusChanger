@@ -14,6 +14,9 @@ internal class Settings_Every_Set_Command : Command<Routes.Settings.Every.Set>
 
     public async override Task<string> Execute(Routes.Settings.Every.Set request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         settings.EverySecondsSchedule.Statuses = request.Statuses.ToList();

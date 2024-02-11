@@ -14,6 +14,9 @@ internal class Settings_Schedule_Edit_Command : Command<Routes.Settings.Schedule
 
     public async override Task<string> Execute(Routes.Settings.Schedule.Edit request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         var item = settings.DateTimeSchedule.Items[request.Id - 1];

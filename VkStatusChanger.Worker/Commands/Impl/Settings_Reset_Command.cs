@@ -14,6 +14,9 @@ internal class Settings_Reset_Command : Command<Routes.Settings.Reset>
 
     public override Task<string> Execute(Routes.Settings.Reset request)
     {
+        if (!ModelState.IsValid)
+            return Task.FromResult(BadCommand());
+
         _settingsManager.Reset();
 
         var output = "Настройки сброшены.";

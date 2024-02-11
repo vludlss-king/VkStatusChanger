@@ -14,6 +14,9 @@ internal class Settings_Schedule_Remove_Command : Command<Routes.Settings.Schedu
 
     public async override Task<string> Execute(Routes.Settings.Schedule.Remove request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         if (request.Id.HasValue)

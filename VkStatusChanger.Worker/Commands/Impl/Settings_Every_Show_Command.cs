@@ -15,6 +15,9 @@ internal class Settings_Every_Show_Command : Command<Routes.Settings.Every.Show>
 
     public async override Task<string> Execute(Routes.Settings.Every.Show request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         var outputBuilder = new StringBuilder();

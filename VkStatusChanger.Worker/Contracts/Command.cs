@@ -16,5 +16,8 @@ namespace VkStatusChanger.Worker.Contracts
         }
 
         public abstract Task<string> Execute(T request);
+
+        public string BadCommand()
+            => string.Join(",\n", ModelState.Errors.Select(error => error.ErrorMessage));
     }
 }

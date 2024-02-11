@@ -14,6 +14,9 @@ internal class Settings_Type_Show_Command : Command<Routes.Settings.Type.Show>
 
     public async override Task<string> Execute(Routes.Settings.Type.Show request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         var output = $"Тип настроек: {settings.Type}";

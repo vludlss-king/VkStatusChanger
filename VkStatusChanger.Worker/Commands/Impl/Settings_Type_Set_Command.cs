@@ -14,6 +14,9 @@ internal class Settings_Type_Set_Command : Command<Routes.Settings.Type.Set>
 
     public async override Task<string> Execute(Routes.Settings.Type.Set request)
     {
+        if (!ModelState.IsValid)
+            return BadCommand();
+
         var settings = await _settingsManager.Read();
 
         settings.Type = request.SettingsType;

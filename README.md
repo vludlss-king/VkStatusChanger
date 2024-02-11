@@ -1,5 +1,5 @@
 **Версия сервиса:**
-1.0.1 (прототип)
+1.0.2 (прототип)
 
 **История изменений:**
 [Посмотреть](https://github.com/vludlss-king/VkStatusChanger/blob/main/CHANGELOG.md)
@@ -17,11 +17,12 @@
 
 **Применённые библиотеки:**
 - CommandLineParser
-- Microsoft.Extensions.Hosting
+- FluentValidation
 - Quartz
 - Serilog
 - VkNet
 - Scrutor
+- Microsoft.Extensions.Hosting
 
 **Тестирование:**
 - xUnit

@@ -29,8 +29,11 @@ internal class Handler : IHostedService
                 if (command.GetType().GetInterface("ICommand`1").GenericTypeArguments[0].FullName == request.GetType().FullName)
                 {
                     dynamic validator = _validators.FirstOrDefault(validator => validator.GetType().GetInterface("IValidator`1").GenericTypeArguments[0].FullName == request.GetType().FullName);
-                    var validationResult = await validator.ValidateAsync(request);
-                    ReflectionHelper.SetPrivatePropertyValue(command, "ModelState", validationResult);
+                    if(validator is not null)
+                    {
+                        var validationResult = await validator.ValidateAsync(request);
+                        ReflectionHelper.SetPrivatePropertyValue(command, "ModelState", validationResult);
+                    }
 
                     string output = await command.Execute(request);
                     Console.WriteLine(output);

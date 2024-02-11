@@ -6,7 +6,14 @@ namespace VkStatusChanger.Worker.Contracts
     internal abstract class Command<T> : ICommand<T>
     {
         [AllowNull]
-        protected ValidationResult ModelState { get; set; }
+        private ValidationResult _modelState;
+
+        [AllowNull]
+        protected ValidationResult ModelState
+        { 
+            get => _modelState;
+            set => _modelState = value ?? new ValidationResult { };
+        }
 
         public abstract Task<string> Execute(T request);
     }

@@ -3,7 +3,7 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 
 namespace VkStatusChanger.Worker.Commands.Impl;
 
-internal class Settings_Reset_Command : ICommand<Routes.Settings.Reset>
+internal class Settings_Reset_Command : Command<Routes.Settings.Reset>
 {
     private readonly ISettingsManager _settingsManager;
 
@@ -12,7 +12,7 @@ internal class Settings_Reset_Command : ICommand<Routes.Settings.Reset>
         _settingsManager = settingsManager;    
     }
 
-    public Task<string> Execute(Routes.Settings.Reset request)
+    public override Task<string> Execute(Routes.Settings.Reset request)
     {
         _settingsManager.Reset();
 

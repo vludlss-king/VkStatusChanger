@@ -3,7 +3,7 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 
 namespace VkStatusChanger.Worker.Commands.Impl;
 
-internal class Settings_Type_Show_Command : ICommand<Routes.Settings.Type.Show>
+internal class Settings_Type_Show_Command : Command<Routes.Settings.Type.Show>
 {
     private readonly ISettingsManager _settingsManager;
 
@@ -12,7 +12,7 @@ internal class Settings_Type_Show_Command : ICommand<Routes.Settings.Type.Show>
         _settingsManager = settingsManager;    
     }
 
-    public async Task<string> Execute(Routes.Settings.Type.Show request)
+    public async override Task<string> Execute(Routes.Settings.Type.Show request)
     {
         var settings = await _settingsManager.Read();
 

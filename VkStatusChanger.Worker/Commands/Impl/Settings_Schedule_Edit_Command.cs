@@ -3,7 +3,7 @@ using VkStatusChanger.Worker.Contracts.Infrastructure;
 
 namespace VkStatusChanger.Worker.Commands.Impl;
 
-internal class Settings_Schedule_Edit_Command : ICommand<Routes.Settings.Schedule.Edit>
+internal class Settings_Schedule_Edit_Command : Command<Routes.Settings.Schedule.Edit>
 {
     private readonly ISettingsManager _settingsManager;
 
@@ -12,7 +12,7 @@ internal class Settings_Schedule_Edit_Command : ICommand<Routes.Settings.Schedul
         _settingsManager = settingsManager;    
     }
 
-    public async Task<string> Execute(Routes.Settings.Schedule.Edit request)
+    public async override Task<string> Execute(Routes.Settings.Schedule.Edit request)
     {
         var settings = await _settingsManager.Read();
 

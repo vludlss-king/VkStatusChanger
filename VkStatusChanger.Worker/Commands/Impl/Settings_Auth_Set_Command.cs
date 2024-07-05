@@ -15,7 +15,7 @@ internal class Settings_Auth_Set_Command : Command<Routes.Settings.Auth.Set>
     public async override Task<string> Execute(Routes.Settings.Auth.Set request)
     {
         if (!ModelState.IsValid)
-            return await BadCommand();
+            return await BadCommand().ConfigureAwait(false);
 
         var settings = await _settingsManager.Read();
 

@@ -24,7 +24,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 SettingsType = SettingsType.Schedule
             };
 
-            var output = await sut.Execute(request);
+            var output = await sut.Execute(request).ConfigureAwait(false);
 
             output.Should().Be("Тип настроек изменён.");
         }
@@ -42,7 +42,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var sut = new Settings_Type_Show_Command(settingsManagerStub.Object);
             Routes.Settings.Type.Show command = new Routes.Settings.Type.Show();
 
-            var output = await sut.Execute(command);
+            var output = await sut.Execute(command).ConfigureAwait(false);
 
             output.Should().Be($"Тип настроек: {SettingsType.Schedule}");
         }
@@ -61,7 +61,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var sut = new Settings_Auth_Set_Command(settingsManagerStub.Object);
             Routes.Settings.Auth.Set command = new Routes.Settings.Auth.Set();
 
-            var output = await sut.Execute(command);
+            var output = await sut.Execute(command).ConfigureAwait(false);
 
             output.Should().Be("Токен авторизации изменён.");
         }
@@ -80,7 +80,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var sut = new Settings_Auth_Show_Command(settingsManagerStub.Object);
             Routes.Settings.Auth.Show command = new Routes.Settings.Auth.Show();
 
-            var output = await sut.Execute(command);
+            var output = await sut.Execute(command).ConfigureAwait(false);
 
             output.Should().Be($"Токен авторизации: {accessToken}");
         }
@@ -99,7 +99,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
             var sut = new Settings_Reset_Command(settingsManagerStub.Object);
             Routes.Settings.Reset command = new Routes.Settings.Reset();
 
-            var output = await sut.Execute(command);
+            var output = await sut.Execute(command).ConfigureAwait(false);
 
             output.Should().Be("Настройки сброшены.");
         }
@@ -125,7 +125,7 @@ namespace VkStatusChanger.Worker.Tests.UnitTests
                 Seconds = 30,
             };
 
-            var output = await sut.Execute(command);
+            var output = await sut.Execute(command).ConfigureAwait(false);
 
             output.Should().Be("Настройки Every изменены.");
         }

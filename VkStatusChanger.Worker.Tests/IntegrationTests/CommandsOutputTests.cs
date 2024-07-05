@@ -14,10 +14,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         public async Task Settings_type_set_command_shows_expected_output_to_console()
         {
             const string command = "settings type set --settings-type Every";
-            var sut = await ExecuteCommand(command);
+            var sut = await ExecuteCommand(command).ConfigureAwait(false);
             RestoreSettings();
 
-            var output = await sut.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync().ConfigureAwait(false);
 
             output.Should().Be("Тип настроек изменён.");
         }
@@ -27,14 +27,14 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string typeSetCommand = "settings type set --settings-type Schedule";
-            await ExecuteCommand(typeSetCommand);
+            await ExecuteCommand(typeSetCommand).ConfigureAwait(false);
 
             const string typeShowCommand = "settings type show";
-            var sut = await ExecuteCommand(typeShowCommand);
+            var sut = await ExecuteCommand(typeShowCommand).ConfigureAwait(false);
             RestoreSettings();
 
             // Act
-            var output = await sut.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync().ConfigureAwait(false);
 
             // Assert
             output.Should().Be("Тип настроек: Schedule");
@@ -44,10 +44,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         public async Task Settings_auth_set_command_shows_expected_output_to_console()
         {
             const string command = "settings auth set --access-token NewAccessToken";
-            var sut = await ExecuteCommand(command);
+            var sut = await ExecuteCommand(command).ConfigureAwait(false);
             RestoreSettings();
 
-            var output = await sut.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync().ConfigureAwait(false);
 
             // Assert
             output.Should().Be("Токен авторизации изменён.");
@@ -58,14 +58,14 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
         {
             // Arrange
             const string authSetCommand = "settings auth set --access-token NewAccessToken";
-            await ExecuteCommand(authSetCommand);
+            await ExecuteCommand(authSetCommand).ConfigureAwait(false);
 
             const string authShowCommand = "settings auth show";
-            var sut = await ExecuteCommand(authShowCommand);
+            var sut = await ExecuteCommand(authShowCommand).ConfigureAwait(false);
             RestoreSettings();
             
             // Act
-            var output = await sut.StandardOutput.ReadLineAsync();
+            var output = await sut.StandardOutput.ReadLineAsync().ConfigureAwait(false);
 
             // Assert
             output.Should().Be("Токен авторизации: NewAccessToken");
@@ -91,7 +91,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             if (process is null)
                 throw new Exception("Не удалось создать процесс");
 
-            await process.WaitForExitAsync();
+            await process.WaitForExitAsync().ConfigureAwait(false);
             process.Kill();
 
             return process;

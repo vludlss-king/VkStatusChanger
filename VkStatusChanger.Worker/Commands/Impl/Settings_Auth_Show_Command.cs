@@ -15,9 +15,9 @@ internal class Settings_Auth_Show_Command : Command<Routes.Settings.Auth.Show>
     public async override Task<string> Execute(Routes.Settings.Auth.Show request)
     {
         if (!ModelState.IsValid)
-            return await BadCommand();
+            return await BadCommand().ConfigureAwait(false);
 
-        var settings = await _settingsManager.Read();
+        var settings = await _settingsManager.Read().ConfigureAwait(false);
 
         var token = string.IsNullOrWhiteSpace(settings.AccessToken)
             ? "отсутствует"

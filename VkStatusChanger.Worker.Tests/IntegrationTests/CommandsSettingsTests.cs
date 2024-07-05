@@ -32,10 +32,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(command);
+            await sut.Execute(command).ConfigureAwait(false);
 
             // Assert
-            var settings = await settingsManager.Read();
+            var settings = await settingsManager.Read().ConfigureAwait(false);
 
             settings.AccessToken.Should().Be(command.AccessToken);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
@@ -59,10 +59,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(command);
+            await sut.Execute(command).ConfigureAwait(false);
 
             // Assert
-            var settings = await settingsManager.Read();
+            var settings = await settingsManager.Read().ConfigureAwait(false);
 
             settings.Type.Should().Be(command.SettingsType);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
@@ -87,10 +87,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(command);
+            await sut.Execute(command).ConfigureAwait(false);
 
             // Assert
-            var settings = await settingsManager.Read();
+            var settings = await settingsManager.Read().ConfigureAwait(false);
 
             settings.EverySecondsSchedule.Statuses.Should().BeEquivalentTo(command.Statuses);
             settings.EverySecondsSchedule.Seconds.Should().Be(command.Seconds);
@@ -115,10 +115,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(command);
+            await sut.Execute(command).ConfigureAwait(false);
 
             // Assert
-            var settings = await settingsManager.Read();
+            var settings = await settingsManager.Read().ConfigureAwait(false);
 
             settings.DateTimeSchedule.Items.Count.Should().Be(1);
             settings.DateTimeSchedule.Items.First().Status.Should().Be(command.Status);
@@ -145,7 +145,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
-            await addCommand.Execute(addRequest);
+            await addCommand.Execute(addRequest).ConfigureAwait(false);
 
             var sut = new Settings_Schedule_Edit_Command(settingsManager);
             Routes.Settings.Schedule.Edit sutRequest = new Routes.Settings.Schedule.Edit
@@ -157,10 +157,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(sutRequest);
+            await sut.Execute(sutRequest).ConfigureAwait(false);
 
             // Assert
-            var settings = await settingsManager.Read();
+            var settings = await settingsManager.Read().ConfigureAwait(false);
 
             settings.DateTimeSchedule.Items.Count.Should().Be(1);
             settings.DateTimeSchedule.Items.First().Status.Should().Be(sutRequest.Status);
@@ -187,7 +187,7 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
                 Date = new DateTime(2024, 1, 13),
                 Time = new TimeSpan(6, 5, 30),
             };
-            await addCommand.Execute(addRequest);
+            await addCommand.Execute(addRequest).ConfigureAwait(false);
 
             var sut = new Settings_Schedule_Remove_Command(settingsManager);
             Routes.Settings.Schedule.Remove sutRequest = new Routes.Settings.Schedule.Remove
@@ -196,10 +196,10 @@ namespace VkStatusChanger.Worker.Tests.IntegrationTests
             };
 
             // Act
-            await sut.Execute(sutRequest);
+            await sut.Execute(sutRequest).ConfigureAwait(false);
 
             // Assert
-            var settings = await settingsManager.Read();
+            var settings = await settingsManager.Read().ConfigureAwait(false);
 
             settings.DateTimeSchedule.Items.Count.Should().Be(0);
             settings.EverySecondsSchedule.Statuses.Count.Should().Be(0);
